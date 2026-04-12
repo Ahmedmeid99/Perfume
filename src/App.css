@@ -7,7 +7,7 @@
   width: 100%;
   padding: 1.5rem 2rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   z-index: 100;
   background: rgba(13, 13, 13, 0.85);
@@ -17,6 +17,7 @@
 }
 
 .nav-brand {
+  margin-inline-end: auto;
   font-weight: 700;
   font-size: 1.4rem;
   color: var(--primary-color);
@@ -24,10 +25,22 @@
   text-transform: uppercase;
 }
 
+.nav-brand a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .nav-controls {
+  margin-inline-end: 2rem;
   display: flex;
   align-items: center;
   gap: 2rem;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .nav-links {
@@ -60,6 +73,7 @@
 }
 
 .cta-button {
+  display: inline-block;
   background: transparent;
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
@@ -68,6 +82,7 @@
   letter-spacing: 1px;
   transition: all 0.3s ease;
   border-radius: 2px;
+  text-align: center;
 }
 
 .cta-button:hover {
@@ -353,13 +368,73 @@ footer {
   letter-spacing: 1px;
 }
 
+.hamburger {
+  display: none;
+  cursor: pointer;
+  color: var(--primary-color);
+  z-index: 101;
+  transition: transform 0.3s;
+}
+
+.hamburger:hover {
+  transform: scale(1.1);
+}
+
 /* Responsive */
 @media (max-width: 900px) {
+  .navbar {
+    padding: 1rem 1.5rem;
+  }
+  .nav-brand {
+    font-size: 1.1rem;
+  }
+  .nav-controls {
+    margin-inline-end: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(13, 13, 13, 0.98);
+    backdrop-filter: blur(16px);
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1.5rem;
+    transform: translateY(-20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .nav-actions {
+    gap: 0.75rem;
+  }
+  .cta-button.nav-cta {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  .lang-toggle {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
   .hero-title {
     font-size: 2.8rem;
   }
+  .hamburger {
+    display: block;
+    margin-left: 0.25rem;
+  }
+  .nav-controls.mobile-open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
   .nav-links {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
   }
   .quality-grid {
     grid-template-columns: 1fr;

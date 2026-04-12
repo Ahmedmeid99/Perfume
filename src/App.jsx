@@ -62,6 +62,7 @@ const content = {
 
 function App() {
   const [lang, setLang] = useState('en');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = content[lang];
 
   const toggleLanguage = () => {
@@ -97,17 +98,39 @@ function App() {
     <div className="app">
       {/* Navbar */}
       <nav className="navbar">
-        <div className="nav-brand">{t.brand}</div>
-        <div className="nav-controls">
+        <div className="nav-brand">
+          <a href="#">{t.brand}</a>
+        </div>
+
+        <div className={`nav-controls ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           <div className="nav-links">
-            <a href="#process" className="nav-link">{t.navProcess}</a>
-            <a href="#ingredients" className="nav-link">{t.navEssence}</a>
-            <a href="#book" className="nav-link">{t.navConsult}</a>
+            <a href="#process" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navProcess}</a>
+            <a href="#ingredients" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navEssence}</a>
+            <a href="#book" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navConsult}</a>
           </div>
-          <button className="lang-toggle" onClick={toggleLanguage}>
-            {lang === 'en' ? 'العربية' : 'English'}
+        </div>
+
+        <div className="nav-actions">
+          <button className="lang-toggle" onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }}>
+            {lang === 'en' ? 'AR' : 'EN'}
           </button>
-          <button className="cta-button">{t.bookNow}</button>
+          <a href="#book" className="cta-button nav-cta" onClick={() => setIsMobileMenuOpen(false)}>{t.bookNow}</a>
+          <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              {isMobileMenuOpen ? (
+                <>
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </>
+              )}
+            </svg>
+          </div>
         </div>
       </nav>
 
