@@ -136,19 +136,40 @@ function App() {
           </div>
           <div className="process-grid">
             <div className="process-card animate-view reveal delay-1">
-              <div className="process-icon">01</div>
-              <h3 className="process-title">{t.step1Title}</h3>
-              <p className="process-desc">{t.step1Desc}</p>
+              <div className="process-card-inner">
+                <div className="card-front">
+                  <div className="process-icon">01</div>
+                  <h3 className="process-title">{t.step1Title}</h3>
+                  <p className="process-desc">{t.step1Desc}</p>
+                </div>
+                <div className="card-back">
+                  <img src="/discovery_card.png" alt="Discovery Setup" />
+                </div>
+              </div>
             </div>
             <div className="process-card animate-view reveal delay-2">
-              <div className="process-icon">02</div>
-              <h3 className="process-title">{t.step2Title}</h3>
-              <p className="process-desc">{t.step2Desc}</p>
+              <div className="process-card-inner">
+                <div className="card-front">
+                  <div className="process-icon">02</div>
+                  <h3 className="process-title">{t.step2Title}</h3>
+                  <p className="process-desc">{t.step2Desc}</p>
+                </div>
+                <div className="card-back">
+                  <img src="/formulation_card.png" alt="Formulation Lab" />
+                </div>
+              </div>
             </div>
             <div className="process-card animate-view reveal delay-3">
-              <div className="process-icon">03</div>
-              <h3 className="process-title">{t.step3Title}</h3>
-              <p className="process-desc">{t.step3Desc}</p>
+              <div className="process-card-inner">
+                <div className="card-front">
+                  <div className="process-icon">03</div>
+                  <h3 className="process-title">{t.step3Title}</h3>
+                  <p className="process-desc">{t.step3Desc}</p>
+                </div>
+                <div className="card-back">
+                  <img src="/creation_card.png" alt="Final Creation" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
