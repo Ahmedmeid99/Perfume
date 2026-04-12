@@ -43,7 +43,7 @@ export default function Consultation({ isStandalone = true }) {
                 <div className="form-group">
                   <textarea className="form-input" placeholder={t.formMessage} rows="5" required></textarea>
                 </div>
-                <button type="submit" className="cta-button solid" style={{ padding: '1rem 3rem', fontSize: '1rem', marginTop: '1rem' }}>
+                <button type="submit" className="cta-button solid" style={{ padding: '1rem 3rem', fontSize: '1rem', marginTop: '1.5rem', marginBottom: '3rem' }}>
                   {t.formSubmit}
                 </button>
               </form>

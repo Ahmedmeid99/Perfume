@@ -11,6 +11,16 @@
   --font-main: 'Alexandria', sans-serif;
 }
 
+[data-theme="light"] {
+  --primary-color: #bfa15f; 
+  --primary-hover: #d4af37;
+  --bg-color: #fafafa;
+  --surface-color: #ffffff;
+  --text-light: #111111;
+  --text-muted: #555555;
+  --accent-color: #8c733f;
+}
+
 * {
   margin: 0;
   padding: 0;
