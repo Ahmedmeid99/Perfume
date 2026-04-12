@@ -16,6 +16,7 @@ export default function Navbar() {
         <div className="nav-links">
           <Link to="/process" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navProcess}</Link>
           <Link to="/essence" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navEssence}</Link>
+          <Link to="/perfumes" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navCollection}</Link>
           <Link to="/consultation" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navConsult}</Link>
         </div>
       </div>

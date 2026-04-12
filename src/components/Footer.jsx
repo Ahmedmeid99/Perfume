@@ -19,6 +19,7 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li style={{ marginBottom: '0.8rem' }}><Link to="/process" style={{ color: 'var(--text-muted)' }}>{t.navProcess}</Link></li>
               <li style={{ marginBottom: '0.8rem' }}><Link to="/essence" style={{ color: 'var(--text-muted)' }}>{t.navEssence}</Link></li>
+              <li style={{ marginBottom: '0.8rem' }}><Link to="/perfumes" style={{ color: 'var(--text-muted)' }}>{t.navCollection}</Link></li>
               <li style={{ marginBottom: '0.8rem' }}><Link to="/consultation" style={{ color: 'var(--text-muted)' }}>{t.navConsult}</Link></li>
               <li style={{ marginBottom: '0.8rem' }}><Link to="/sourcing" style={{ color: 'var(--text-muted)' }}>{t.exploreSourcing}</Link></li>
             </ul>

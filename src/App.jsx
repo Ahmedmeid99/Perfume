@@ -9,6 +9,7 @@ import Process from './pages/Process';
 import Essence from './pages/Essence';
 import Consultation from './pages/Consultation';
 import Sourcing from './pages/Sourcing';
+import Perfumes from './pages/Perfumes';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Route path="/process" element={<Process />} />
             <Route path="/essence" element={<Essence />} />
             <Route path="/consultation" element={<Consultation />} />
+            <Route path="/perfumes" element={<Perfumes />} />
             <Route path="/sourcing" element={<Sourcing />} />
           </Routes>
           <FloatingWidgets />
