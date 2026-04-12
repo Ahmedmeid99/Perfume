@@ -1,0 +1,157 @@
+import React, { createContext, useState, useEffect, useContext } from 'react';
+
+const content = {
+  en: {
+    brand: "Aura Bespoke",
+    navProcess: "The Process",
+    navEssence: "Essence",
+    navConsult: "Consultation",
+    bookNow: "Contact Us",
+    heroSubtitle: "Haute Parfumerie",
+    heroTitle: "Craft Your Signature Scent",
+    heroDesc: "Aura Bespoke formulates exclusive fragrances for men and women, tailored precisely to your unique essence and desires. Experience the pinnacle of custom perfumery.",
+    beginJourney: "Begin Your Journey",
+    section1Title: "The Art of ",
+    section1Span: "Bespoke",
+    section1Desc: "Our perfumers guide you through an intricate and intimate journey to distill your personality into a tangible aroma, crafting distinctive scents for both men and women.",
+    step1Title: "Discovery",
+    step1Desc: "An intimate consultation to explore your memories, preferences, and the specific notes that resonate with your spirit.",
+    step2Title: "Formulation",
+    step2Desc: "Our master noses blend rare, exquisite ingredients in our atelier, sending you variations to test and refine.",
+    step3Title: "Creation",
+    step3Desc: "Your final formulation is bottled in artisanal crystal glass, engraved with your insignia, and archived securely.",
+    qualitySubtitle: "Pure Ingredients",
+    qualityTitle: "Nature's Rarest Essences",
+    qualityP1: "A bespoke fragrance is only as remarkable as its ingredients. We source sustainably and ethically from the world's finest producers.",
+    qualityP2: "From hand-pollinated Madagascan vanilla to the deepest, aged oud from Assam, your scent is woven from materials often inaccessible to commercial perfumery.",
+    exploreSourcing: "Explore Our Sourcing",
+    ctaTitle: "Ready for your signature?",
+    ctaDesc: "Commission your custom fragrance today and step into a world of unseen luxury. Consultations available globally via private appointments.",
+    reserveConsult: "Reserve Private Consultation",
+    sourcingHeroTitle: "Sustainable & Ethical Sourcing",
+    sourcingDesc: "We travel the world to partner directly with independent farmers, ensuring the purity of our ingredients while supporting local communities.",
+    contactHeroTitle: "Private Consultation",
+    contactDesc: "Schedule an intimate session with our master perfumers to begin crafting a scent that is undeniably yours.",
+    processIntro: "Whether you seek a deeply masculine woody signature or a highly sophisticated feminine floral arrangement, our process is tailored exclusively to you.",
+    processDetail1: "We understand that skin chemistry differs greatly. We create specific, highly personalized perfumes for men and women, exploring an array of fragrance profiles from classic fougère to modern gourmand.",
+    essenceDetails: "Our ingredient palette spans across the gender spectrum. We stock the rarest robust leathers and spices, as well as the most delicate petals and musks.",
+    consultationDetails: "During your consultation, we discuss your lifestyle, body chemistry, and aspirations. Tell us if you're envisioning a bold masculine presence, a vibrant feminine aura, or an avant-garde unisex profile.",
+    formName: "Full Name",
+    formEmail: "Email Address",
+    formMessage: "Your Request",
+    formSubmit: "Send Request",
+    formSuccess: "Thank you. Our bespoke team will contact you shortly.",
+    teamTitle: "Our Master Artisans",
+    teamDesc: "Meet the brilliant noses and ingredients specialists behind our bespoke creations.",
+    teamRole1: "Master Perfumer",
+    teamName1: "Jean-Claude Delon",
+    teamRole2: "Sourcing Director",
+    teamName2: "Amara Singh",
+    teamRole3: "Fragrance Evaluator",
+    teamName3: "Liam Chen",
+    reviewsTitle: "Client Experiences",
+    reviewsDesc: "Hear from those who have journeyed to find their ultimate signature scent.",
+    review1: "\"An absolute revelation. The scent they crafted perfectly encapsulates my spirit. It's unlike anything money can buy off a shelf.\"",
+    reviewer1: "E. Rothschild",
+    review2: "\"The process was an intimate exploration of my memories. They bottled my favorite moments into a fragrance I wear every single day.\"",
+    reviewer2: "S. Al Maktoum",
+    review3: "\"Supreme luxury. The ingredients are so potent and pure that I only need one spray to project absolute confidence.\"",
+    reviewer3: "A. Vanderbilt",
+    mapTitle: "Visit Our Atelier",
+    mapDesc: "Experience the magic firsthand at our flagship location.",
+    address: "Ezbet Al Saaida, Abu Kabir, Al Sharqia Governorate",
+    quickLinks: "Quick Links",
+    privacyPolicy: "Privacy Policy",
+    termsOfService: "Terms of Service",
+    shippingPolicy: "Shipping Policy"
+  },
+  ar: {
+    brand: "أورا للعطور",
+    navProcess: "مراحل التصنيع",
+    navEssence: "الخلاصة",
+    navConsult: "حجز استشارة",
+    bookNow: "تواصل معنا",
+    heroSubtitle: "عطور راقية",
+    heroTitle: "اصنع عطرك المميز",
+    heroDesc: "نقوم بتركيب عطور حصرية للرجال والنساء، مصممة خصيصًا لتناسب جوهرك ورغباتك الفريدة. جرب قمة العطور المخصصة.",
+    beginJourney: "ابدأ رحلتك",
+    section1Title: "فن ",
+    section1Span: "التخصيص",
+    section1Desc: "يرشدك خبراؤنا في رحلة دقيقة وحميمة لتقطير شخصيتك في رائحة ملموسة، وصناعة عطور مميزة لكل من الرجال والنساء.",
+    step1Title: "الاستكشاف",
+    step1Desc: "استشارة حميمة لاستكشاف ذكرياتك وتفضيلاتك والمكونات المحددة التي يتردد صداها مع روحك.",
+    step2Title: "التركيب",
+    step2Desc: "يقوم خبراؤنا بمزج مكونات نادرة ورائعة في مشغلنا، وإرسال اختلافات لك لاختبارها وتحسينها.",
+    step3Title: "الإنتاج",
+    step3Desc: "تُعبأ تركيبتك النهائية في زجاج كريستالي حرفي، منقوشة بشعارك، وتُحفظ بأمان.",
+    qualitySubtitle: "مكونات نقية",
+    qualityTitle: "أندر خلاصات الطبيعة",
+    qualityP1: "لا يكون العطر المخصص رائعًا إلا بقدر مكوناته. نحن نستورد بشكل مستدام وأخلاقي من أفضل المنتجين في العالم.",
+    qualityP2: "من فانيليا مدغشقر الملقحة يدويًا إلى العود العميق المعتق من آسام، يتم نسج عطرك من مواد لا يمكن الوصول إليها غالبًا في صناعة العطور التجارية.",
+    exploreSourcing: "اكتشف مصادرنا",
+    ctaTitle: "هل أنت مستعد لبصمتك؟",
+    ctaDesc: "اطلب عطرك المخصص اليوم وادخل إلى عالم من الفخامة غير المرئية. الاستشارات متاحة عالميًا عبر المواعيد الخاصة.",
+    reserveConsult: "احجز استشارة خاصة",
+    sourcingHeroTitle: "مصادر مستدامة وأخلاقية",
+    sourcingDesc: "نسافر حول العالم للشراكة المباشرة مع المزارعين المستقلين، لضمان نقاء مكوناتنا ودعم المجتمعات المحلية.",
+    contactHeroTitle: "استشارة خاصة",
+    contactDesc: "حدد موعدًا لجلسة حميمة مع خبراء العطور لدينا للبدء في صنع عطر يعبر عنك تمامًا.",
+    processIntro: "سواء كنت تبحث عن توقيع خشبي رجولي عميق أو تركيبة زهرية نسائية متطورة للغاية، فإن عمليتنا مصممة خصيصًا لك.",
+    processDetail1: "نحن ندرك أن كيمياء البشرة تختلف بشكل كبير. نصنع عطورًا محددة وشخصية للغاية للرجال والنساء، ونستكشف مجموعة من التشكيلات العطرية.",
+    essenceDetails: "تغطي لوحة مكوناتنا جميع الأطياف. نحن نخزن أندر الجلود والتوابل القوية، بالإضافة إلى الرقيقة من البتلات والمسك.",
+    consultationDetails: "أثناء الاستشارة، نناقش نمط حياتك وكيمياء جسمك وتطلعاتك. أخبرنا إذا كنت تتخيل حضورًا رجوليًا جريئًا، أو هالة نسائية نابضة بالحياة، أو عطرًا محايدًا غير تقليدي.",
+    formName: "الاسم الكامل",
+    formEmail: "البريد الإلكتروني",
+    formMessage: "طلبك",
+    formSubmit: "إرسال الطلب",
+    formSuccess: "شكرًا لك. سيتواصل معك فريقنا المختص قريبًا.",
+    teamTitle: "خبراؤنا الحرفيون",
+    teamDesc: "تعرف على مصممي العطور اللامعين ومتخصصي المكونات وراء ابتكاراتنا المخصصة.",
+    teamRole1: "خبير العطور الرئيسي",
+    teamName1: "جان كلود ديلون",
+    teamRole2: "مدير المصادر الحيوية",
+    teamName2: "أمارا سينغ",
+    teamRole3: "مُقيّم العطور",
+    teamName3: "ليام تشين",
+    reviewsTitle: "تجارب عملائنا",
+    reviewsDesc: "استمع إلى أولئك الذين رحلوا للعثور على عطرهم المميز النهائي.",
+    review1: "\"اكتشاف مطلق. العطر الذي صنعوه يجسد روحي تمامًا. إنه لا يشبه أي شيء يمكن أن يشتريه المال من الرف.\"",
+    reviewer1: "إي. روتشيلد",
+    review2: "\"كانت العملية استكشافًا حميمًا لذكرياتي. لقد عبأوا لحظاتي المفضلة في عطر أرتديه كل يوم.\"",
+    reviewer2: "س. آل مكتوم",
+    review3: "\"فخامة فائقة. المكونات قوية ونقية للغاية لدرجة أنني أحتاج إلى رشة واحدة فقط لإبراز الثقة المطلقة.\"",
+    reviewer3: "أ. فاندربيلت",
+    mapTitle: "قم بزيارة مشغلنا",
+    mapDesc: "جرب السحر عن كثب في موقعنا الرئيسي.",
+    address: "عزبة الصعايدة، أبو كبير، محافظة الشرقية",
+    quickLinks: "روابط سريعة",
+    privacyPolicy: "سياسة الخصوصية",
+    termsOfService: "شروط الخدمة",
+    shippingPolicy: "سياسة الشحن"
+  }
+};
+
+const LanguageContext = createContext();
+
+export function LanguageProvider({ children }) {
+  const [lang, setLang] = useState('en');
+
+  const toggleLanguage = () => {
+    setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
+  };
+
+  useEffect(() => {
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  return (
+    <LanguageContext.Provider value={{ lang, setLang, toggleLanguage, t: content[lang] }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  return useContext(LanguageContext);
+}
