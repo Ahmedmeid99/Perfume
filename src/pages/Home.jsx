@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import Process from './Process';
@@ -11,6 +11,20 @@ import MapSection from '../components/MapSection';
 
 export default function Home() {
   const { t, lang } = useLanguage();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroImages = [
+    "/hero_perfume.png",
+    "/perfume_gold_1776084751454.png",
+    "/perfume_crystal_1776084965250.png"
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -33,7 +47,22 @@ export default function Home() {
   return (
     <>
       <section className="hero">
-        <img src="/hero_perfume.png" alt="Bespoke luxury perfume bottle" className="hero-bg animate-view reveal-zoom" />
+        {heroImages.map((src, index) => (
+          <img 
+            key={index}
+            src={src} 
+            alt={`Luxury perfume variation ${index + 1}`} 
+            className="hero-bg" 
+            style={{ 
+              opacity: index === currentSlide ? 0.6 : 0, 
+              transform: index === currentSlide ? 'scale(1)' : 'scale(1.05)',
+              transitionProperty: 'opacity, transform',
+              transitionDuration: '1.5s',
+              transitionTimingFunction: 'ease-in-out',
+              zIndex: 1
+            }} 
+          />
+        ))}
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <span className="hero-subtitle animate-view reveal">{t.heroSubtitle}</span>

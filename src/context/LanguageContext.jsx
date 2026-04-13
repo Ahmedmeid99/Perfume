@@ -6,6 +6,9 @@ const content = {
     navProcess: "The Process",
     navEssence: "Essence",
     navConsult: "Consultation",
+    navGallery: "Gallery",
+    galleryTitle: "Our Creations Gallery",
+    galleryDesc: "A visual journey into our world of bespoke perfumery.",
     bookNow: "Contact Us",
     heroSubtitle: "Haute Parfumerie",
     heroTitle: "Craft Your Signature Scent",
@@ -94,6 +97,9 @@ const content = {
     navProcess: "مراحل التصنيع",
     navEssence: "الخلاصة",
     navConsult: "حجز استشارة",
+    navGallery: "المعرض",
+    galleryTitle: "معرض إبداعاتنا",
+    galleryDesc: "رحلة بصرية في عالمنا للعطور الفاخرة المخصصة.",
     bookNow: "تواصل معنا",
     heroSubtitle: "عطور راقية",
     heroTitle: "اصنع عطرك المميز",
@@ -182,7 +188,7 @@ const content = {
 const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('en');
+  const [lang, setLang] = useState('ar');
 
   const toggleLanguage = () => {
     setLang((prev) => (prev === 'en' ? 'ar' : 'en'));

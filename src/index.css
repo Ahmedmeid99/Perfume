@@ -36,6 +36,16 @@ body {
   transition: direction 0.3s;
 }
 
+::selection {
+  background-color: var(--primary-color);
+  color: var(--bg-color);
+}
+
+::-moz-selection {
+  background-color: var(--primary-color);
+  color: var(--bg-color);
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-main);
   font-weight: 500;
