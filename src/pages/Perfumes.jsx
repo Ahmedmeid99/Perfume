@@ -23,12 +23,12 @@ export default function Perfumes() {
   }, [lang, filterGender, filterType]);
 
   const allPerfumes = [
-    { id: 1, name: t.perfume1Name, desc: t.perfume1Desc, gender: 'men', type: 'woody', img: '/hero_perfume.png' },
-    { id: 2, name: t.perfume2Name, desc: t.perfume2Desc, gender: 'women', type: 'floral', img: '/hero_perfume.png' },
-    { id: 3, name: t.perfume3Name, desc: t.perfume3Desc, gender: 'unisex', type: 'citrus', img: '/hero_perfume.png' },
-    { id: 4, name: t.perfume4Name, desc: t.perfume4Desc, gender: 'unisex', type: 'oriental', img: '/hero_perfume.png' },
-    { id: 5, name: t.perfume5Name, desc: t.perfume5Desc, gender: 'men', type: 'woody', img: '/hero_perfume.png' },
-    { id: 6, name: t.perfume6Name, desc: t.perfume6Desc, gender: 'women', type: 'floral', img: '/hero_perfume.png' },
+    { id: 1, name: t.perfume1Name, desc: t.perfume1Desc, gender: 'unisex', type: 'Composition',    img: '/perfume_gold_1776084751454.png' },
+    { id: 2, name: t.perfume2Name, desc: t.perfume2Desc, gender: 'women', type: 'Makhmariyat',    img: '/perfume_amber_1776085036492.png' },
+    { id: 3, name: t.perfume3Name, desc: t.perfume3Desc, gender: 'unisex', type: 'BodySplash',    img: '/perfume_crystal_1776084965250.png' },
+    { id: 4, name: t.perfume4Name, desc: t.perfume4Desc, gender: 'women', type: 'HairMist',       img: '/perfume_pink_1776084777940.png' },
+    { id: 5, name: t.perfume5Name, desc: t.perfume5Desc, gender: 'unisex', type: 'AirFresheners', img: '/hero_perfume.png' },
+    { id: 6, name: t.perfume6Name, desc: t.perfume6Desc, gender: 'unisex', type: 'Bakhoor',       img: '/perfume_obsidian_1776084817495.png' },
   ];
 
   const filtered = allPerfumes.filter(p => {
@@ -55,10 +55,12 @@ export default function Perfumes() {
 
             <select className="filter-select" value={filterType} onChange={(e) => setFilterType(e.target.value)}>
               <option value="all">{t.filterAll}</option>
-              <option value="woody">{t.filterWoody}</option>
-              <option value="floral">{t.filterFloral}</option>
-              <option value="citrus">{t.filterCitrus}</option>
-              <option value="oriental">{t.filterOriental}</option>
+              <option value="Composition">{t.filterComposition}</option>
+              <option value="Makhmariyat">{t.filterMakhmariyat}</option>
+              <option value="BodySplash">{t.filterBodySplash}</option>
+              <option value="HairMist">{t.filterHairMist}</option>
+              <option value="AirFresheners">{t.filterAirFresheners}</option>
+              <option value="Bakhoor">{t.filterBakhoor}</option>
             </select>
           </div>
 

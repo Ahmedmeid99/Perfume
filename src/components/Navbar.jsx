@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import SamLogo from './SamLogo';
 
 export default function Navbar() {
   const { lang, toggleLanguage, t } = useLanguage();

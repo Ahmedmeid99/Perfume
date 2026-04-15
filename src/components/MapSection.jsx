@@ -20,7 +20,7 @@ export default function MapSection() {
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="Aura Bespoke Location"
+          title="SAM Perfumes Location"
         ></iframe>
       </div>
     </section>

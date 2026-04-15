@@ -8,22 +8,39 @@ import Consultation from './Consultation';
 import TeamSection from '../components/TeamSection';
 import ReviewsSection from '../components/ReviewsSection';
 import MapSection from '../components/MapSection';
+import DepartmentsSection from '../components/DepartmentsSection';
 
 export default function Home() {
   const { t, lang } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [loadedImages, setLoadedImages] = useState(new Set([0]));
 
   const heroImages = [
     "/hero_perfume.png",
     "/perfume_gold_1776084751454.png",
-    "/perfume_crystal_1776084965250.png"
+    "/perfume_amber_1776085036492.png",
+    "/perfume_obsidian_1776084817495.png",
+    "/perfume_pink_1776084777940.png",
+    "/perfume_crystal_1776084965250.png",
   ];
 
+  // Preload all hero images immediately on mount so slides switch without delay
+  useEffect(() => {
+    heroImages.forEach((src, i) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => setLoadedImages((prev) => new Set([...prev, i]));
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Auto-advance slides
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
     }, 5000);
     return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -37,9 +54,7 @@ export default function Home() {
     }, { threshold: 0.15 });
 
     const animatedElements = document.querySelectorAll('.animate-view');
-    animatedElements.forEach((el) => {
-      observer.observe(el);
-    });
+    animatedElements.forEach((el) => { observer.observe(el); });
 
     return () => observer.disconnect();
   }, [lang]);
@@ -48,19 +63,22 @@ export default function Home() {
     <>
       <section className="hero">
         {heroImages.map((src, index) => (
-          <img 
+          <img
             key={index}
-            src={src} 
-            alt={`Luxury perfume variation ${index + 1}`} 
-            className="hero-bg" 
-            style={{ 
-              opacity: index === currentSlide ? 0.6 : 0, 
-              transform: index === currentSlide ? 'scale(1)' : 'scale(1.05)',
+            src={src}
+            alt={`SAM Perfumes — product ${index + 1}`}
+            className="hero-bg"
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : 'auto'}
+            style={{
+              opacity: index === currentSlide ? 0.65 : 0,
+              transform: index === currentSlide ? 'scale(1)' : 'scale(1.04)',
               transitionProperty: 'opacity, transform',
-              transitionDuration: '1.5s',
+              transitionDuration: index === currentSlide ? '1.2s' : '0.8s',
               transitionTimingFunction: 'ease-in-out',
-              zIndex: 1
-            }} 
+              // Active image sits on top; others stay behind so they don't flicker through
+              zIndex: index === currentSlide ? 2 : 1,
+            }}
           />
         ))}
         <div className="hero-overlay"></div>
@@ -75,6 +93,7 @@ export default function Home() {
       </section>
 
       <Process isStandalone={false} />
+      <DepartmentsSection />
       <Essence isStandalone={false} />
       <Sourcing isStandalone={false} />
       <TeamSection />
