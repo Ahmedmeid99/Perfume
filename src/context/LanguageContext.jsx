@@ -225,7 +225,11 @@ export function LanguageProvider({ children }) {
   const [lang, setLang] = useState('ar');
 
   const toggleLanguage = () => {
+    document.documentElement.classList.add('no-transition');
     setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
+    setTimeout(() => {
+      document.documentElement.classList.remove('no-transition');
+    }, 50);
   };
 
   useEffect(() => {

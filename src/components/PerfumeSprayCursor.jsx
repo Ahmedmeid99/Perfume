@@ -6,22 +6,37 @@ const PerfumeSprayCursor = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
+
     let particlesArray = [];
     let animationFrameId;
+    let isHovering = false;
+
+
+    // const handleMouseOver = (e) => {
+    //   const target = e.target;
+    //   if (target.tagName.toLowerCase() === 'a' || target.tagName.toLowerCase() === 'button' || target.closest('a') || target.closest('button')) {
+    //     isHovering = true;
+    //   }
+    // };
+
+    // const handleMouseOut = (e) => {
+    //   isHovering = false;
+    // };
+
+    // window.addEventListener('mouseover', handleMouseOver);
+    // window.addEventListener('mouseout', handleMouseOut);
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    
+
     window.addEventListener('resize', resize);
     resize();
 
     const mouse = {
       x: -100,
       y: -100,
-      radius: 50
     };
 
     let previousMouse = { x: -100, y: -100 };
@@ -29,40 +44,42 @@ const PerfumeSprayCursor = () => {
     const handleMouseMove = (event) => {
       previousMouse.x = mouse.x;
       previousMouse.y = mouse.y;
-      mouse.x = event.x;
-      mouse.y = event.y;
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
 
-      // Calculate speed of mouse to determine how many particles to spawn
       const dx = mouse.x - previousMouse.x;
       const dy = mouse.y - previousMouse.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      const particlesToSpawn = Math.min(Math.floor(distance / 2) + 1, 10);
 
+      // Increase spawn rate significantly when hovering
+      const baseSpawnMultiplier = isHovering ? 4 : 1;
+      const particlesToSpawn = Math.min(Math.floor((distance / 2) * baseSpawnMultiplier) + (isHovering ? 5 : 1), isHovering ? 30 : 10);
+
+      // Generate a burst if hovering and just stopped moving, or continually spray
       for (let i = 0; i < particlesToSpawn; i++) {
-        // distribute them along the movement path
+        // Spray from slightly below the cursor's tip (which is at 16, 2)
         const offsetX = previousMouse.x + (dx * (i / particlesToSpawn));
-        const offsetY = previousMouse.y + (dy * (i / particlesToSpawn));
-        particlesArray.push(new Particle(offsetX, offsetY));
+        const offsetY = previousMouse.y + (dy * (i / particlesToSpawn)) - 10;
+        particlesArray.push(new Particle(offsetX, offsetY, isHovering));
       }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
 
     class Particle {
-      constructor(x, y) {
-        this.x = x + (Math.random() * 10 - 5);
-        this.y = y + (Math.random() * 10 - 5);
-        this.size = Math.random() * 1.5 + 0.5;
-        
-        // Disperse mist randomly
+      constructor(x, y, hovered) {
+        this.x = x + (Math.random() * 20 - 10);
+        this.y = y + (Math.random() * 20 - 10);
+        // Larger particles on hover
+        this.size = Math.random() * (hovered ? 3 : 1.5) + (hovered ? 1 : 0.5);
+
         const angle = Math.random() * Math.PI * 2;
-        // If moving, we can add some momentum, but random looks like spray
-        const speed = Math.random() * 0.8 + 0.2;
+        // Faster burst on hover
+        const speed = Math.random() * (hovered ? 2 : 0.8) + (hovered ? 0.5 : 0.2);
         this.speedX = Math.cos(angle) * speed;
-        this.speedY = Math.sin(angle) * speed - 0.5; // slight upward drift
-        
-        // Mist colors: mixture of white and light gold
+        // More dramatic upward spray on hover
+        this.speedY = Math.sin(angle) * speed - (hovered ? 1.5 : 0.5);
+
         const isGold = Math.random() > 0.5;
         this.color = isGold ? '212, 175, 55' : '255, 255, 255';
         this.opacity = Math.random() * 0.5 + 0.3;
@@ -86,10 +103,16 @@ const PerfumeSprayCursor = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // If hovering, passively spawn particles even when mouse isn't moving fast
+      if (isHovering && Math.random() < 0.3) {
+        particlesArray.push(new Particle(mouse.x, mouse.y - 10, true));
+      }
+
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
         particlesArray[i].draw();
-        
+
         if (particlesArray[i].opacity <= 0.05 || particlesArray[i].size <= 0.1) {
           particlesArray.splice(i, 1);
           i--;
@@ -103,6 +126,8 @@ const PerfumeSprayCursor = () => {
     return () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
+      // window.removeEventListener('mouseover', handleMouseOver);
+      // window.removeEventListener('mouseout', handleMouseOut);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -114,10 +139,10 @@ const PerfumeSprayCursor = () => {
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
         pointerEvents: 'none',
-        zIndex: 9999, // Ensure it's above all standard elements
+        zIndex: 9999,
       }}
     />
   );

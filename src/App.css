@@ -1,4 +1,7 @@
 /* App styles */
+.no-transition * {
+  transition: none !important;
+}
 
 /* Navbar */
 .navbar {
@@ -110,10 +113,12 @@
   content: '';
   position: absolute;
   width: 150%;
-  height: 300px; /* Tall enough to natively cover the button height */
+  height: 300px;
+  /* Tall enough to natively cover the button height */
   background: var(--primary-color);
   left: -25%;
-  top: 100%; /* begins completely empty (below button) */
+  top: 100%;
+  /* begins completely empty (below button) */
   /* Meniscus curve: horizontal 50%, vertical 40px */
   border-radius: 50% 50% 0 0 / 40px 40px 0 0;
   transition: top 1.2s cubic-bezier(0.4, 0, 0.2, 1), border-radius 1.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -125,8 +130,10 @@
 }
 
 .cta-button:not(.nav-cta):hover::before {
-  top: 0; /* fills the button container */
-  border-radius: 0; /* Flattens gracefully as the liquid settles */
+  top: 0;
+  /* fills the button container */
+  border-radius: 0;
+  /* Flattens gracefully as the liquid settles */
 }
 
 /* Fallback/traditional hover for navbar buttons since they shouldn't have the liquid effect */
@@ -308,6 +315,10 @@
   bottom: 0;
   background: linear-gradient(to top, rgba(13, 13, 13, 0.9) 0%, transparent 100%);
   z-index: 1;
+}
+
+[data-theme="light"] .card-back::after {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.9) 0%, transparent 100%);
 }
 
 .process-icon {
@@ -565,6 +576,11 @@ footer {
     background: linear-gradient(to bottom, rgba(13, 13, 13, 0.8) 0%, rgba(13, 13, 13, 0.95) 100%);
   }
 
+  [data-theme="light"] .hero-overlay,
+  [data-theme="light"] [dir="rtl"] .hero-overlay {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.95) 100%);
+  }
+
   .floating-widgets-left,
   .floating-widgets-right {
     bottom: 1rem;
@@ -694,92 +710,155 @@ footer {
 /* Team Section */
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  margin-top: 4rem;
 }
 
 .team-card {
   text-align: center;
-  background: var(--surface-color);
-  padding: 2rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--accent-color);
-  transition: transform 0.3s;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgb(13 13 13 / 6%) 100%);
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.team-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 .team-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 15px 35px rgb(0 0 0 / 12%)
+}
+
+.team-card:hover::before {
+  opacity: 1;
 }
 
 .team-img {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   object-fit: cover;
-  margin: 0 auto 1.5rem auto;
-  border: 4px solid var(--surface-color);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  margin: 0 auto 2rem auto;
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  padding: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   display: block;
+  background: rgba(13, 13, 13, 0.8);
+  transition: transform 0.5s ease, border-color 0.5s ease;
+}
+
+.team-card:hover .team-img {
+  transform: scale(1.05);
+  border-color: var(--primary-color);
 }
 
 .team-card h3 {
   color: var(--text-light);
   margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
 }
 
 .team-role {
   color: var(--primary-color);
-  font-size: 0.9rem;
-  opacity: 0.8;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* Reviews Section */
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  margin-top: 4rem;
 }
 
 .review-card {
-  background: rgba(13, 13, 13, 0.6);
-  padding: 2rem;
-  border-radius: 8px;
-  border-left: 3px solid var(--primary-color);
+  background: linear-gradient(145deg, rgba(204, 163, 107, 0.08) 0%, rgba(13, 13, 13, 0.6) 100%);
+  padding: 3rem 2.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.1);
   position: relative;
+  transition: transform 0.4s ease, border-color 0.4s ease;
+  backdrop-filter: blur(10px);
 }
 
-[dir="rtl"] .review-card {
-  border-left: none;
-  border-right: 3px solid var(--primary-color);
+.review-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+.review-card::after {
+  content: '"';
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  font-size: 7rem;
+  color: rgba(212, 175, 55, 0.08);
+  font-family: serif;
+  line-height: 1;
+  pointer-events: none;
+  transition: color 0.4s ease;
+}
+
+.review-card:hover::after {
+  color: rgba(212, 175, 55, 0.15);
+}
+
+[dir="rtl"] .review-card::after {
+  right: auto;
+  left: 25px;
 }
 
 .review-text {
   font-style: italic;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.8;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
 }
 
 .review-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1.5rem;
 }
 
 .review-img {
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--primary-color);
+  border: 2px solid rgba(212, 175, 55, 0.4);
+  padding: 2px;
 }
 
 .reviewer {
   font-weight: 600;
   color: var(--text-light);
   font-size: 1.1rem;
+  letter-spacing: 0.5px;
 }
 
 /* Map Section */
@@ -952,7 +1031,7 @@ footer {
 .perfume-img-wrapper {
   height: 300px;
   position: relative;
-  background: radial-gradient(circle, rgba(204, 163, 107, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgb(204 163 107 / 17%) 0%, #00000014 70%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1075,17 +1154,29 @@ footer {
   background-color: var(--surface-color);
 }
 
-/* Force CTA section to remain dark in Light Mode */
+[data-theme="light"] .dept-card {
+  border-color: rgba(212, 175, 55, 0.2);
+  background: linear-gradient(160deg, #fdfbf7 0%, #f4eee3 100%) !important;
+}
+
+/* Adapt CTA section to Light Mode */
+[data-theme="light"] .cta-section {
+  background: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), url('/process.png') center/cover fixed;
+}
+
 [data-theme="light"] .cta-section h2,
-[data-theme="light"] .cta-section p,
 [data-theme="light"] .cta-section h3 {
-  color: #ffffff;
+  color: var(--text-light);
+}
+
+[data-theme="light"] .cta-section p {
+  color: var(--text-muted);
 }
 
 [data-theme="light"] .cta-section .form-input {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-light);
 }
 
 [data-theme="light"] .review-card {
@@ -1166,6 +1257,10 @@ footer {
   pointer-events: none;
 }
 
+[data-theme="light"] .gallery-overlay-box {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.8) 0%, transparent 60%);
+}
+
 .gallery-item:hover .gallery-overlay-box {
   opacity: 1;
 }
@@ -1240,13 +1335,13 @@ footer {
   overflow: hidden;
   border: 1px solid rgba(212, 175, 55, 0.15);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.4s ease,
-              box-shadow 0.4s ease;
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
   cursor: pointer;
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.7s ease, transform 0.7s ease,
-              box-shadow 0.4s ease, border-color 0.4s ease;
+    box-shadow 0.4s ease, border-color 0.4s ease;
 }
 
 .dept-card.active {
@@ -1257,7 +1352,7 @@ footer {
 .dept-card:hover {
   transform: translateY(-10px) !important;
   border-color: rgba(212, 175, 55, 0.5);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(212, 175, 55, 0.2);
 }
 
 .dept-card-border {
@@ -1381,9 +1476,13 @@ footer {
 .dept-img-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
   opacity: 0;
   transition: opacity 0.5s ease;
+}
+
+[data-theme="light"] .dept-img-overlay {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.4) 60%, transparent 100%);
 }
 
 .dept-card:hover .dept-img-overlay {
