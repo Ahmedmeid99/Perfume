@@ -11,12 +11,12 @@ export default function SamLogo({ size = 52, className = '' }) {
   if (!imgFailed) {
     return (
       <img
-        src="/logo.png"
+        src="/sam-logo.jpeg"
         alt="Sam Perfumes Logo"
         width={size}
         height={size}
         className={className}
-        style={{ objectFit: 'contain', borderRadius: '50%' }}
+        style={{ objectFit: 'cover', borderRadius: '50%' }}
         onError={() => setImgFailed(true)}
       />
     );

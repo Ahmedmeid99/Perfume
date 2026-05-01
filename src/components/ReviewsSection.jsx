@@ -13,21 +13,21 @@ export default function ReviewsSection() {
         <div className="reviews-grid">
           <div className="review-card animate-view reveal delay-1">
             <div className="review-header">
-              <img src="https://randomuser.me/api/portraits/men/55.jpg" className="review-img" alt="Client 1" />
+              <img src="https://api.dicebear.com/9.x/initials/svg?seed=MA&backgroundColor=1a1500&textColor=d4af37&fontFamily=Georgia" className="review-img" alt="Client 1" />
               <p className="reviewer">{t.reviewer1}</p>
             </div>
             <p className="review-text">{t.review1}</p>
           </div>
           <div className="review-card animate-view reveal delay-2">
             <div className="review-header">
-              <img src="https://randomuser.me/api/portraits/men/60.jpg" className="review-img" alt="Client 2" />
+              <img src="https://api.dicebear.com/9.x/initials/svg?seed=OH&backgroundColor=1a1500&textColor=d4af37&fontFamily=Georgia" className="review-img" alt="Client 2" />
               <p className="reviewer">{t.reviewer2}</p>
             </div>
             <p className="review-text">{t.review2}</p>
           </div>
           <div className="review-card animate-view reveal delay-3">
             <div className="review-header">
-              <img src="https://randomuser.me/api/portraits/men/77.jpg" className="review-img" alt="Client 3" />
+              <img src="https://api.dicebear.com/9.x/initials/svg?seed=TY&backgroundColor=1a1500&textColor=d4af37&fontFamily=Georgia" className="review-img" alt="Client 3" />
               <p className="reviewer">{t.reviewer3}</p>
             </div>
             <p className="review-text">{t.review3}</p>

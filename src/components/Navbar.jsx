@@ -72,15 +72,19 @@ export default function Navbar() {
           <NavLink to="/gallery" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navGallery}</NavLink>
           <NavLink to="/consultation" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navConsult}</NavLink>
           <ThemeToggleBtn className="mobile-only-theme" />
+          <button className="lang-toggle mobile-only" onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }}>
+            {lang === 'en' ? 'AR' : 'EN'}
+          </button>
+          <Link to="/consultation" className="cta-button nav-cta mobile-only" onClick={() => setIsMobileMenuOpen(false)}>{t.bookNow}</Link>
         </div>
       </div>
 
       <div className="nav-actions">
         <ThemeToggleBtn className="desktop-only-theme" />
-        <button className="lang-toggle" onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }}>
+        <button className="lang-toggle desktop-only" onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }}>
           {lang === 'en' ? 'AR' : 'EN'}
         </button>
-        <Link to="/consultation" className="cta-button nav-cta" onClick={() => setIsMobileMenuOpen(false)}>{t.bookNow}</Link>
+        <Link to="/consultation" className="cta-button nav-cta desktop-only" onClick={() => setIsMobileMenuOpen(false)}>{t.bookNow}</Link>
         <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
             {isMobileMenuOpen ? (

@@ -12,20 +12,20 @@ export default function TeamSection() {
         </div>
         <div className="team-grid">
           <div className="team-card animate-view reveal delay-1">
-            <img src="https://randomuser.me/api/portraits/men/44.jpg" className="team-img" alt="Team 1" />
+            <img src="/team_elsayed.png" className="team-img" alt="Team 1" />
             <h3>{t.teamName1}</h3>
             <p className="team-role">{t.teamRole1}</p>
           </div>
           <div className="team-card animate-view reveal delay-2">
-            <img src="https://randomuser.me/api/portraits/men/69.jpg" className="team-img" alt="Team 2" />
+            <img src="/team_ahmed.png" className="team-img" alt="Team 2" />
             <h3>{t.teamName2}</h3>
             <p className="team-role">{t.teamRole2}</p>
           </div>
-          <div className="team-card animate-view reveal delay-3">
-            <img src="https://randomuser.me/api/portraits/men/33.jpg" className="team-img" alt="Team 3" />
+          {/* <div className="team-card animate-view reveal delay-3">
+            <img src="/team_maiem.png" className="team-img" alt="Team 3" />
             <h3>{t.teamName3}</h3>
             <p className="team-role">{t.teamRole3}</p>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

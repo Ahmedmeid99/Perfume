@@ -16,6 +16,7 @@ export default function Home() {
   const [loadedImages, setLoadedImages] = useState(new Set([0]));
 
   const heroImages = [
+    // "/sam.jpeg",
     "/hero_perfume.png",
     "/perfume_gold_1776084751454.png",
     "/perfume_amber_1776085036492.png",
@@ -31,7 +32,7 @@ export default function Home() {
       img.src = src;
       img.onload = () => setLoadedImages((prev) => new Set([...prev, i]));
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Auto-advance slides
@@ -40,7 +41,7 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
     }, 5000);
     return () => clearInterval(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

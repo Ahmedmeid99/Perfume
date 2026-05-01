@@ -5,6 +5,7 @@ export default function Perfumes() {
   const { t, lang } = useLanguage();
   const [filterGender, setFilterGender] = useState('all');
   const [filterType, setFilterType] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -20,7 +21,7 @@ export default function Perfumes() {
     animatedElements.forEach((el) => { observer.observe(el); });
 
     return () => observer.disconnect();
-  }, [lang, filterGender, filterType]);
+  }, [lang, filterGender, filterType, searchQuery]);
 
   const allPerfumes = [
     { id: 1, name: t.perfume1Name, desc: t.perfume1Desc, gender: 'unisex', type: 'Composition',    img: '/perfume_gold_1776084751454.png' },
@@ -34,7 +35,13 @@ export default function Perfumes() {
   const filtered = allPerfumes.filter(p => {
     const matchGender = filterGender === 'all' || p.gender === filterGender;
     const matchType = filterType === 'all' || p.type === filterType;
-    return matchGender && matchType;
+    
+    const query = searchQuery ? searchQuery.trim().toLowerCase() : '';
+    const matchSearch = !query || 
+                        (p.name && p.name.toLowerCase().includes(query)) || 
+                        (p.desc && p.desc.toLowerCase().includes(query));
+                        
+    return matchGender && matchType && matchSearch;
   });
 
   return (
@@ -45,43 +52,63 @@ export default function Perfumes() {
             <h2 className="section-title">{t.navCollection}</h2>
           </div>
           
-          <div className="filter-bar animate-view reveal delay-1">
-            <select className="filter-select" value={filterGender} onChange={(e) => setFilterGender(e.target.value)}>
-              <option value="all">{t.filterGenderAll}</option>
-              <option value="men">{t.filterMen}</option>
-              <option value="women">{t.filterWomen}</option>
-              <option value="unisex">{t.filterUnisex}</option>
-            </select>
-
-            <select className="filter-select" value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-              <option value="all">{t.filterAll}</option>
-              <option value="Composition">{t.filterComposition}</option>
-              <option value="Makhmariyat">{t.filterMakhmariyat}</option>
-              <option value="BodySplash">{t.filterBodySplash}</option>
-              <option value="HairMist">{t.filterHairMist}</option>
-              <option value="AirFresheners">{t.filterAirFresheners}</option>
-              <option value="Bakhoor">{t.filterBakhoor}</option>
-            </select>
-          </div>
-
-          <div className="perfume-grid">
-            {filtered.length > 0 ? filtered.map((perfume, i) => (
-              <div className={`perfume-card animate-view reveal delay-${(i % 3) + 1}`} key={perfume.id}>
-                <div className="perfume-img-wrapper">
-                  <img src={perfume.img} alt={perfume.name} />
-                  <div className="perfume-tags">
-                     <span className="perfume-tag">{t['filter' + perfume.gender.charAt(0).toUpperCase() + perfume.gender.slice(1)] || t.filterUnisex}</span>
-                     <span className="perfume-tag">{t['filter' + perfume.type.charAt(0).toUpperCase() + perfume.type.slice(1)]}</span>
-                  </div>
-                </div>
-                <div className="perfume-info">
-                  <h3>{perfume.name}</h3>
-                  <p>{perfume.desc}</p>
-                </div>
+          <div className="perfumes-layout">
+            <aside className="perfumes-sidebar animate-view reveal delay-1">
+              <div className="filter-group">
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  placeholder={t.searchPlaceholder} 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ width: '100%', marginBottom: '1.5rem' }}
+                />
               </div>
-            )) : (
-              <p style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '3rem', color: 'var(--text-muted)' }}>{t.noMatches}</p>
-            )}
+              <div className="filter-group">
+                <h3>{t.filterGenderAll.split(' ')[1] || 'Gender'}</h3>
+                <ul className="filter-list">
+                  <li className={filterGender === 'all' ? 'active' : ''} onClick={() => setFilterGender('all')}>{t.filterGenderAll}</li>
+                  <li className={filterGender === 'men' ? 'active' : ''} onClick={() => setFilterGender('men')}>{t.filterMen}</li>
+                  <li className={filterGender === 'women' ? 'active' : ''} onClick={() => setFilterGender('women')}>{t.filterWomen}</li>
+                  <li className={filterGender === 'unisex' ? 'active' : ''} onClick={() => setFilterGender('unisex')}>{t.filterUnisex}</li>
+                </ul>
+              </div>
+
+              <div className="filter-group">
+                <h3>{t.filterAll.split(' ')[1] || 'Category'}</h3>
+                <ul className="filter-list">
+                  <li className={filterType === 'all' ? 'active' : ''} onClick={() => setFilterType('all')}>{t.filterAll}</li>
+                  <li className={filterType === 'Composition' ? 'active' : ''} onClick={() => setFilterType('Composition')}>{t.filterComposition}</li>
+                  <li className={filterType === 'Makhmariyat' ? 'active' : ''} onClick={() => setFilterType('Makhmariyat')}>{t.filterMakhmariyat}</li>
+                  <li className={filterType === 'BodySplash' ? 'active' : ''} onClick={() => setFilterType('BodySplash')}>{t.filterBodySplash}</li>
+                  <li className={filterType === 'HairMist' ? 'active' : ''} onClick={() => setFilterType('HairMist')}>{t.filterHairMist}</li>
+                  <li className={filterType === 'AirFresheners' ? 'active' : ''} onClick={() => setFilterType('AirFresheners')}>{t.filterAirFresheners}</li>
+                  <li className={filterType === 'Bakhoor' ? 'active' : ''} onClick={() => setFilterType('Bakhoor')}>{t.filterBakhoor}</li>
+                </ul>
+              </div>
+            </aside>
+
+            <div className="perfume-grid-container">
+              <div className="perfume-grid">
+                {filtered.length > 0 ? filtered.map((perfume, i) => (
+                  <div className={`perfume-card animate-view reveal delay-${(i % 3) + 1}`} key={perfume.id}>
+                    <div className="perfume-img-wrapper">
+                      <img src={perfume.img} alt={perfume.name} />
+                      <div className="perfume-tags">
+                         <span className="perfume-tag">{t['filter' + perfume.gender.charAt(0).toUpperCase() + perfume.gender.slice(1)] || t.filterUnisex}</span>
+                         <span className="perfume-tag">{t['filter' + perfume.type.charAt(0).toUpperCase() + perfume.type.slice(1)]}</span>
+                      </div>
+                    </div>
+                    <div className="perfume-info">
+                      <h3>{perfume.name}</h3>
+                      <p>{perfume.desc}</p>
+                    </div>
+                  </div>
+                )) : (
+                  <p style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '3rem', color: 'var(--text-muted)' }}>{t.noMatches}</p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
