@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import Process from './Process';
-import Essence from './Essence';
 import Sourcing from './Sourcing';
-import Consultation from './Consultation';
 import TeamSection from '../components/TeamSection';
 import ReviewsSection from '../components/ReviewsSection';
 import MapSection from '../components/MapSection';
@@ -16,7 +14,6 @@ export default function Home() {
   const [loadedImages, setLoadedImages] = useState(new Set([0]));
 
   const heroImages = [
-    // "/sam.jpeg",
     "/hero_perfume.png",
     "/perfume_gold_1776084751454.png",
     "/perfume_amber_1776085036492.png",
@@ -25,23 +22,19 @@ export default function Home() {
     "/perfume_crystal_1776084965250.png",
   ];
 
-  // Preload all hero images immediately on mount so slides switch without delay
   useEffect(() => {
     heroImages.forEach((src, i) => {
       const img = new Image();
       img.src = src;
       img.onload = () => setLoadedImages((prev) => new Set([...prev, i]));
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Auto-advance slides
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
     }, 5000);
     return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -77,7 +70,6 @@ export default function Home() {
               transitionProperty: 'opacity, transform',
               transitionDuration: index === currentSlide ? '1.2s' : '0.8s',
               transitionTimingFunction: 'ease-in-out',
-              // Active image sits on top; others stay behind so they don't flicker through
               zIndex: index === currentSlide ? 2 : 1,
             }}
           />
@@ -93,13 +85,11 @@ export default function Home() {
         </div>
       </section>
 
-      <Process isStandalone={false} />
+      <Process />
       <DepartmentsSection />
-      <Essence isStandalone={false} />
       <Sourcing isStandalone={false} />
       <TeamSection />
       <ReviewsSection />
-      <Consultation isStandalone={false} />
       <MapSection />
     </>
   );

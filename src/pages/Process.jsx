@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { Link } from 'react-router-dom';
 
-export default function Process({ isStandalone = true }) {
+export default function Process() {
   const { t, lang } = useLanguage();
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    if (isStandalone) window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -17,11 +19,12 @@ export default function Process({ isStandalone = true }) {
     const animatedElements = document.querySelectorAll('.animate-view');
     animatedElements.forEach((el) => { observer.observe(el); });
     return () => observer.disconnect();
-  }, [lang, isStandalone]);
+  }, [lang]);
 
   return (
-    <div style={{ paddingTop: isStandalone ? '80px' : '0' }}>
-      <section className="section process-section" style={{minHeight: isStandalone ? '80vh' : 'auto'}} id="process">
+    <div style={{ paddingTop: '80px' }}>
+      {/* Our Story / Process Section */}
+      <section className="section process-section" id="process">
         <div className="container">
           <div className="section-header animate-view reveal">
             <h2 className="section-title">{t.section1Title}<span>{t.section1Span}</span></h2>
@@ -72,6 +75,26 @@ export default function Process({ isStandalone = true }) {
           </div>
         </div>
       </section>
+
+      {/* Essence Section (Formerly Essence Page) */}
+      <section className="quality-section" style={{ background: 'var(--bg-alt)' }}>
+        <div className="quality-grid">
+          <div className="quality-image-wrapper">
+            <img src="/ingredients.png" alt="Premium raw ingredients" className="quality-image" />
+          </div>
+          <div className="quality-content">
+            <div className="animate-view reveal-left">
+              <span className="hero-subtitle">{t.qualitySubtitle}</span>
+              <h2 className="section-title">{t.qualityTitle}</h2>
+              <p>{t.qualityP1}</p>
+              <p>{t.qualityP2}</p>
+              <p>{t.essenceDetails}</p>
+              <Link to="/sourcing" className="cta-button" style={{ marginTop: '1.5rem', display: 'inline-block' }}>{t.exploreSourcing}</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

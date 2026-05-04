@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import SamLogo from './SamLogo';
+import { ShoppingBag, User, LogOut } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../redux/userSlice';
 
 export default function Navbar() {
   const { lang, toggleLanguage, t } = useLanguage();
+  const dispatch = useDispatch();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const cartQuantity = useSelector(state => state.cart.totalQuantity);
+  const { currentUser, isAuthenticated } = useSelector(state => state.user);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -67,24 +72,41 @@ export default function Navbar() {
         </button>
         <div className="nav-links">
           <NavLink to="/process" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navProcess}</NavLink>
-          <NavLink to="/essence" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navEssence}</NavLink>
           <NavLink to="/perfumes" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navCollection}</NavLink>
           <NavLink to="/gallery" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navGallery}</NavLink>
-          <NavLink to="/consultation" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navConsult}</NavLink>
           <ThemeToggleBtn className="mobile-only-theme" />
           <button className="lang-toggle mobile-only" onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }}>
             {lang === 'en' ? 'AR' : 'EN'}
           </button>
-          <Link to="/consultation" className="cta-button nav-cta mobile-only" onClick={() => setIsMobileMenuOpen(false)}>{t.bookNow}</Link>
         </div>
       </div>
 
       <div className="nav-actions">
         <ThemeToggleBtn className="desktop-only-theme" />
+        
+        <Link to="/cart" className="nav-icon-btn cart-btn" aria-label="Shopping Cart">
+          <ShoppingBag size={22} />
+          {cartQuantity > 0 && <span className="cart-badge">{cartQuantity}</span>}
+        </Link>
+
+        <div className="user-nav">
+          {isAuthenticated ? (
+            <div className="user-menu-trigger">
+              <button className="nav-icon-btn" onClick={() => dispatch(logout())} aria-label="Logout">
+                <LogOut size={22} />
+              </button>
+              <span className="user-name-hint">{currentUser?.userName?.split(' ')[0]}</span>
+            </div>
+          ) : (
+            <Link to="/login" className="nav-icon-btn" aria-label="Login">
+              <User size={22} />
+            </Link>
+          )}
+        </div>
+
         <button className="lang-toggle desktop-only" onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }}>
           {lang === 'en' ? 'AR' : 'EN'}
         </button>
-        <Link to="/consultation" className="cta-button nav-cta desktop-only" onClick={() => setIsMobileMenuOpen(false)}>{t.bookNow}</Link>
         <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
             {isMobileMenuOpen ? (

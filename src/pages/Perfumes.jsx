@@ -1,113 +1,276 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { GetCategories } from '../api/Category';
+import { 
+  GetAllCategoryProducts, 
+  GetAllProducts, 
+  GetPaginatedProducts, 
+  GetpaginatedCategoryProducts,
+  GetTotalProductCount,
+  GetCategoryProductCount
+} from '../api/Product';
+import { addToCart } from '../redux/cartSlice';
+import { useDispatch } from 'react-redux';
+import { ShoppingCart, Search, Loader2, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+
+const FALLBACK_IMAGES = [
+  '/perfume_gold_1776084751454.png',
+  '/perfume_amber_1776085036492.png',
+  '/perfume_obsidian_1776084817495.png',
+  '/perfume_pink_1776084777940.png'
+];
 
 export default function Perfumes() {
   const { t, lang } = useLanguage();
-  const [filterGender, setFilterGender] = useState('all');
-  const [filterType, setFilterType] = useState('all');
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const [filterCategory, setFilterCategory] = useState(
+    location.state?.categoryId || 'all'
+  );
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Pagination State
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(6);
+  const [totalItems, setTotalItems] = useState(0);
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const cats = await GetCategories();
+        if (cats) setCategories(cats);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchInitialData();
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
+    fetchProducts();
+  }, [filterCategory, page, lang]);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      let prods;
+      let count;
+      
+      if (filterCategory === 'all') {
+        // Try paginated first
+        prods = await GetPaginatedProducts(page, pageSize);
+        
+        // If paginated fails (e.g. 404 on remote API), fallback to GetAll and slice
+        if (!prods) {
+          const allProds = await GetAllProducts();
+          if (allProds) {
+            count = allProds.length;
+            prods = allProds.slice((page - 1) * pageSize, page * pageSize);
+          }
+        } else {
+          count = await GetTotalProductCount();
         }
-      });
-    }, { threshold: 0.1 });
+      } else {
+        prods = await GetpaginatedCategoryProducts(filterCategory, page, pageSize);
+        
+        // Fallback for categories if paginated fails
+        if (!prods) {
+          const allCatProds = await GetAllCategoryProducts(filterCategory);
+          if (allCatProds) {
+            count = allCatProds.length;
+            prods = allCatProds.slice((page - 1) * pageSize, page * pageSize);
+          }
+        } else {
+          count = await GetCategoryProductCount(filterCategory);
+        }
+      }
+      
+      if (prods) setProducts(prods);
+      else setProducts([]);
+      
+      if (count !== undefined) setTotalItems(count);
+      else setTotalItems(0);
+    } catch (error) {
+      console.error("Error fetching perfumes:", error);
+      setProducts([]);
+      setTotalItems(0);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const animatedElements = document.querySelectorAll('.animate-view');
-    animatedElements.forEach((el) => { observer.observe(el); });
+  const handleCategoryChange = (catId) => {
+    setFilterCategory(catId);
+    setPage(1); // Reset to first page
+  };
 
-    return () => observer.disconnect();
-  }, [lang, filterGender, filterType, searchQuery]);
+  const totalPages = Math.ceil(totalItems / pageSize);
 
-  const allPerfumes = [
-    { id: 1, name: t.perfume1Name, desc: t.perfume1Desc, gender: 'unisex', type: 'Composition',    img: '/perfume_gold_1776084751454.png' },
-    { id: 2, name: t.perfume2Name, desc: t.perfume2Desc, gender: 'women', type: 'Makhmariyat',    img: '/perfume_amber_1776085036492.png' },
-    { id: 3, name: t.perfume3Name, desc: t.perfume3Desc, gender: 'unisex', type: 'BodySplash',    img: '/perfume_crystal_1776084965250.png' },
-    { id: 4, name: t.perfume4Name, desc: t.perfume4Desc, gender: 'women', type: 'HairMist',       img: '/perfume_pink_1776084777940.png' },
-    { id: 5, name: t.perfume5Name, desc: t.perfume5Desc, gender: 'unisex', type: 'AirFresheners', img: '/hero_perfume.png' },
-    { id: 6, name: t.perfume6Name, desc: t.perfume6Desc, gender: 'unisex', type: 'Bakhoor',       img: '/perfume_obsidian_1776084817495.png' },
-  ];
-
-  const filtered = allPerfumes.filter(p => {
-    const matchGender = filterGender === 'all' || p.gender === filterGender;
-    const matchType = filterType === 'all' || p.type === filterType;
+  const filtered = products.filter(p => {
+    const name = p.name || p.Name || p.productName || p.ProductName || '';
+    const desc = p.description || p.Description || '';
     
     const query = searchQuery ? searchQuery.trim().toLowerCase() : '';
     const matchSearch = !query || 
-                        (p.name && p.name.toLowerCase().includes(query)) || 
-                        (p.desc && p.desc.toLowerCase().includes(query));
+                        name.toLowerCase().includes(query) || 
+                        desc.toLowerCase().includes(query);
                         
-    return matchGender && matchType && matchSearch;
+    return matchSearch;
   });
 
   return (
     <div style={{ paddingTop: '80px', minHeight: '100vh', background: 'var(--bg-color)' }}>
       <section className="section perfumes-page">
         <div className="container">
-          <div className="section-header animate-view reveal">
+          <div className="section-header animate-view reveal active">
             <h2 className="section-title">{t.navCollection}</h2>
           </div>
           
           <div className="perfumes-layout">
-            <aside className="perfumes-sidebar animate-view reveal delay-1">
+            <aside className="perfumes-sidebar animate-view reveal active">
               <div className="filter-group">
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  placeholder={t.searchPlaceholder} 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{ width: '100%', marginBottom: '1.5rem' }}
-                />
-              </div>
-              <div className="filter-group">
-                <h3>{t.filterGenderAll.split(' ')[1] || 'Gender'}</h3>
-                <ul className="filter-list">
-                  <li className={filterGender === 'all' ? 'active' : ''} onClick={() => setFilterGender('all')}>{t.filterGenderAll}</li>
-                  <li className={filterGender === 'men' ? 'active' : ''} onClick={() => setFilterGender('men')}>{t.filterMen}</li>
-                  <li className={filterGender === 'women' ? 'active' : ''} onClick={() => setFilterGender('women')}>{t.filterWomen}</li>
-                  <li className={filterGender === 'unisex' ? 'active' : ''} onClick={() => setFilterGender('unisex')}>{t.filterUnisex}</li>
-                </ul>
+                <div className="search-box">
+                  <Search size={18} className="search-icon" />
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder={t.searchPlaceholder} 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="filter-group">
-                <h3>{t.filterAll.split(' ')[1] || 'Category'}</h3>
+                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Filter size={18} /> {t.filterAll.split(' ')[1] || 'Category'}
+                </h3>
                 <ul className="filter-list">
-                  <li className={filterType === 'all' ? 'active' : ''} onClick={() => setFilterType('all')}>{t.filterAll}</li>
-                  <li className={filterType === 'Composition' ? 'active' : ''} onClick={() => setFilterType('Composition')}>{t.filterComposition}</li>
-                  <li className={filterType === 'Makhmariyat' ? 'active' : ''} onClick={() => setFilterType('Makhmariyat')}>{t.filterMakhmariyat}</li>
-                  <li className={filterType === 'BodySplash' ? 'active' : ''} onClick={() => setFilterType('BodySplash')}>{t.filterBodySplash}</li>
-                  <li className={filterType === 'HairMist' ? 'active' : ''} onClick={() => setFilterType('HairMist')}>{t.filterHairMist}</li>
-                  <li className={filterType === 'AirFresheners' ? 'active' : ''} onClick={() => setFilterType('AirFresheners')}>{t.filterAirFresheners}</li>
-                  <li className={filterType === 'Bakhoor' ? 'active' : ''} onClick={() => setFilterType('Bakhoor')}>{t.filterBakhoor}</li>
+                  <li 
+                    className={filterCategory === 'all' ? 'active' : ''} 
+                    onClick={() => handleCategoryChange('all')}
+                  >
+                    {t.filterAll}
+                  </li>
+                  {categories.map(cat => {
+                    const cId = cat.categoryId || cat.CategoryId || cat.productCategoryID;
+                    const cName = cat.categoryName || cat.CategoryName || cat.name;
+                    return (
+                      <li 
+                        key={cId} 
+                        className={filterCategory === cId ? 'active' : ''} 
+                        onClick={() => handleCategoryChange(cId)}
+                      >
+                        {cName}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </aside>
 
             <div className="perfume-grid-container">
-              <div className="perfume-grid">
-                {filtered.length > 0 ? filtered.map((perfume, i) => (
-                  <div className={`perfume-card animate-view reveal delay-${(i % 3) + 1}`} key={perfume.id}>
-                    <div className="perfume-img-wrapper">
-                      <img src={perfume.img} alt={perfume.name} />
-                      <div className="perfume-tags">
-                         <span className="perfume-tag">{t['filter' + perfume.gender.charAt(0).toUpperCase() + perfume.gender.slice(1)] || t.filterUnisex}</span>
-                         <span className="perfume-tag">{t['filter' + perfume.type.charAt(0).toUpperCase() + perfume.type.slice(1)]}</span>
-                      </div>
-                    </div>
-                    <div className="perfume-info">
-                      <h3>{perfume.name}</h3>
-                      <p>{perfume.desc}</p>
-                    </div>
+              {loading ? (
+                <div className="loading-state">
+                  <Loader2 className="spinner" size={48} />
+                  <p>Loading your collection...</p>
+                </div>
+              ) : (
+                <>
+                  <div className="perfume-grid">
+                    {filtered.length > 0 ? filtered.map((perfume, i) => {
+                      const id = perfume.productID || perfume.ProductID || perfume.productId || perfume.ProductId || i;
+                      const name = perfume.name || perfume.Name || perfume.productName || perfume.ProductName;
+                      const desc = perfume.description || perfume.Description;
+                      const price = perfume.price || perfume.Price || 0;
+                      const rawImg = perfume.ImageUrl || perfume.imageUrl || perfume.imagePath || perfume.ImagePath || perfume.imageURL || perfume.ImageURL;
+                      const img = rawImg || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length];
+
+                      return (
+                        <div className="perfume-card animate-view reveal active" key={id}>
+                          <div className="perfume-img-wrapper">
+                            <Link to={`/product/${id}`}>
+                              <img src={img} alt={name} />
+                            </Link>
+                            <div className="perfume-overlay">
+                              <button 
+                                className="add-to-cart-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  dispatch(addToCart({ id, name, price, img }));
+                                }}
+                              >
+                                <ShoppingCart size={20} />
+                                <span>Add to Cart</span>
+                              </button>
+                            </div>
+                          </div>
+                          <div className="perfume-info">
+                            <div className="perfume-header">
+                              <Link to={`/product/${id}`}>
+                                <h3>{name}</h3>
+                              </Link>
+                              <span className="perfume-price">{price} EGP</span>
+                            </div>
+                            <p className="perfume-card-desc">{desc}</p>
+                          </div>
+                        </div>
+                      );
+                    }) : (
+                      <p style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '3rem', color: 'var(--text-muted)' }}>{t.noMatches}</p>
+                    )}
                   </div>
-                )) : (
-                  <p style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '3rem', color: 'var(--text-muted)' }}>{t.noMatches}</p>
-                )}
-              </div>
+
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="pagination" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '4rem' }}>
+                      <button 
+                        className="pagination-btn" 
+                        disabled={page === 1}
+                        onClick={() => setPage(prev => Math.max(1, prev - 1))}
+                        style={{ padding: '0.8rem', borderRadius: '50%', background: 'var(--bg-alt)', border: 'none', color: 'var(--text-color)', cursor: page === 1 ? 'not-allowed' : 'pointer', opacity: page === 1 ? 0.5 : 1 }}
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        {[...Array(totalPages)].map((_, i) => (
+                          <button 
+                            key={i + 1}
+                            onClick={() => setPage(i + 1)}
+                            style={{ 
+                              width: '40px', 
+                              height: '40px', 
+                              borderRadius: '50%', 
+                              border: 'none', 
+                              background: page === i + 1 ? 'var(--primary-color)' : 'var(--bg-alt)',
+                              color: page === i + 1 ? 'white' : 'var(--text-color)',
+                              fontWeight: 'bold',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {i + 1}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button 
+                        className="pagination-btn" 
+                        disabled={page === totalPages}
+                        onClick={() => setPage(prev => Math.min(totalPages, prev + 1))}
+                        style={{ padding: '0.8rem', borderRadius: '50%', background: 'var(--bg-alt)', border: 'none', color: 'var(--text-color)', cursor: page === totalPages ? 'not-allowed' : 'pointer', opacity: page === totalPages ? 0.5 : 1 }}
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>
