@@ -13,6 +13,8 @@ import Gallery from './pages/Gallery';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
+import MyOrders from './pages/MyOrders';
+import ChangePassword from './pages/ChangePassword';
 import './App.css';
 
 import { Provider } from 'react-redux';
@@ -34,6 +36,8 @@ function App() {
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/my-orders" element={<MyOrders />} />
+              <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/product/:id" element={<ProductDetails />} />
             </Routes>
             <FloatingWidgets />

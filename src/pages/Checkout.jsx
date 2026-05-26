@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { CreditCard, Truck, ShoppingBag, CheckCircle, Loader2 } from 'lucide-react';
 
 export default function Checkout() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items, totalAmount } = useSelector(state => state.cart);
@@ -16,8 +16,8 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [formData, setFormData] = useState({
-    address: currentUser?.address || '',
-    phone: currentUser?.phone || '',
+    address: currentUser?.user?.address || currentUser?.address || '',
+    phone: currentUser?.user?.phone || currentUser?.phone || '',
     paymentMethod: 'cod'
   });
 
@@ -31,7 +31,7 @@ export default function Checkout() {
     setLoading(true);
     try {
       const orderData = {
-        customerID: currentUser.customerID || 1,
+        customerID: currentUser?.user?.userId || currentUser?.user?.UserId || currentUser?.customerID || 1,
         orderDate: new Date().toISOString(),
         totalAmount: totalAmount,
         address: formData.address,

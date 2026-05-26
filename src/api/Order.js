@@ -1,22 +1,30 @@
-import { API_BASE } from "./Variables";
-import axios from "axios";
+import apiClient from "./apiClient";
 
 export const PlaceOrder = async (orderData) => {
     try {
-        const response = await axios.post(`${API_BASE}/Order`, orderData);
-        return response.data;
+        // Map fields to match C# entities in backend (CreateOrderDto)
+        const payload = {
+            userId: orderData.CustomerId || orderData.customerId || orderData.customerID || orderData.userId || orderData.UserId || 1,
+            companyId: orderData.CompanyId || orderData.companyId || 1,
+            items: (orderData.Items || orderData.items || []).map(item => ({
+                productId: item.ProductId || item.productId || item.productID || item.id,
+                quantity: item.Quantity || item.quantity
+            }))
+        };
+        const response = await apiClient.post(`/Orders`, payload);
+        return response;
     } catch (error) {
         console.error("Error placing order:", error);
         throw error;
     }
 };
 
-export const GetCustomerOrders = async (customerId) => {
+export const GetUserOrders = async (userId) => {
     try {
-        const response = await axios.get(`${API_BASE}/Order/customer/${customerId}`);
-        return response.data;
+        const response = await apiClient.get(`/Orders/user/${userId}`);
+        return response;
     } catch (error) {
-        console.error("Error fetching customer orders:", error);
+        console.error("Error fetching user orders:", error);
         throw error;
     }
 };

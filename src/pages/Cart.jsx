@@ -13,7 +13,7 @@ export default function Cart() {
   const { items, totalAmount } = useSelector(state => state.cart);
   const { currentUser, isAuthenticated } = useSelector(state => state.user);
 
-  const SHIPPING = 90;
+  const SHIPPING = 0;
   const [loading, setLoading] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
 
@@ -30,7 +30,7 @@ export default function Cart() {
     setLoading(true);
     try {
       const orderData = {
-        CustomerId: currentUser.CustomerId || currentUser.customerID || 1,
+        CustomerId: currentUser?.user?.userId || currentUser?.user?.UserId || currentUser?.CustomerId || currentUser?.customerID || 1,
         OrderDate: new Date().toISOString(),
         TotalAmount: totalAmount + SHIPPING,
         StatusID: 1, // Pending
@@ -154,24 +154,34 @@ export default function Cart() {
               <h2 style={{ marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
                 {lang === 'en' ? 'Summary' : 'الملخص'}
               </h2>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <span>{lang === 'en' ? 'Subtotal' : 'المجموع الفرعي'}</span>
-                <span>{totalAmount} EGP</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <span>{lang === 'en' ? 'Shipping' : 'الشحن'}</span>
-                <span style={{ color: 'var(--primary-color)' }}>{SHIPPING} EGP</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '2px solid var(--border-color)', fontWeight: 'bold', fontSize: '1.2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '1.5rem' }}>
                 <span>{lang === 'en' ? 'Total' : 'الإجمالي'}</span>
-                <span style={{ color: 'var(--primary-color)' }}>{totalAmount + SHIPPING} EGP</span>
+                <span style={{ color: 'var(--primary-color)' }}>{totalAmount} EGP</span>
+              </div>
+
+              <div style={{
+                background: 'rgba(212, 175, 55, 0.05)',
+                border: '1px dashed rgba(212, 175, 55, 0.3)',
+                borderRadius: '10px',
+                padding: '1rem',
+                margin: '1.5rem 0',
+                fontSize: '0.85rem',
+                lineHeight: '1.5',
+                color: 'var(--text-color)',
+                textAlign: lang === 'ar' ? 'right' : 'left'
+              }}>
+                <p style={{ margin: 0 }}>
+                  💡 {lang === 'en' 
+                    ? 'We use cash on delivery, and to confirm the seriousness of the order, you will need to pay 10% of the order value in advance.' 
+                    : 'نحن نستخدم الدفع عند الاستلام، ولتأكيد جدية الطلب، ستحتاج إلى دفع 10٪ من قيمة الطلب مقدماً.'}
+                </p>
               </div>
               
               <button 
                 className="cta-button solid" 
                 onClick={handleSubmitOrder}
                 disabled={loading}
-                style={{ width: '100%', marginTop: '2rem', padding: '1.2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.8rem' }}
+                style={{ width: '100%', padding: '1.2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.8rem' }}
               >
                 {loading ? <Loader2 className="spinner" size={20} /> : <CreditCard size={20} />}
                 {lang === 'en' ? 'Submit Order' : 'إرسال الطلب'}

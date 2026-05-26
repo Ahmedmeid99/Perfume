@@ -13,13 +13,7 @@ import { addToCart } from '../redux/cartSlice';
 import { useDispatch } from 'react-redux';
 import { ShoppingCart, Search, Loader2, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-
-const FALLBACK_IMAGES = [
-  '/perfume_gold_1776084751454.png',
-  '/perfume_amber_1776085036492.png',
-  '/perfume_obsidian_1776084817495.png',
-  '/perfume_pink_1776084777940.png'
-];
+import { getProductId, getProductName, getProductDesc, getProductPrice, getProductImage } from '../api/productHelpers';
 
 export default function Perfumes() {
   const { t, lang } = useLanguage();
@@ -112,8 +106,8 @@ export default function Perfumes() {
   const totalPages = Math.ceil(totalItems / pageSize);
 
   const filtered = products.filter(p => {
-    const name = p.name || p.Name || p.productName || p.ProductName || '';
-    const desc = p.description || p.Description || '';
+    const name = getProductName(p, lang);
+    const desc = getProductDesc(p, lang);
     
     const query = searchQuery ? searchQuery.trim().toLowerCase() : '';
     const matchSearch = !query || 
@@ -184,12 +178,11 @@ export default function Perfumes() {
                 <>
                   <div className="perfume-grid">
                     {filtered.length > 0 ? filtered.map((perfume, i) => {
-                      const id = perfume.productID || perfume.ProductID || perfume.productId || perfume.ProductId || i;
-                      const name = perfume.name || perfume.Name || perfume.productName || perfume.ProductName;
-                      const desc = perfume.description || perfume.Description;
-                      const price = perfume.price || perfume.Price || 0;
-                      const rawImg = perfume.ImageUrl || perfume.imageUrl || perfume.imagePath || perfume.ImagePath || perfume.imageURL || perfume.ImageURL;
-                      const img = rawImg || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length];
+                      const id = getProductId(perfume, i);
+                      const name = getProductName(perfume, lang);
+                      const desc = getProductDesc(perfume, lang);
+                      const price = getProductPrice(perfume);
+                      const img = getProductImage(perfume, i);
 
                       return (
                         <div className="perfume-card animate-view reveal active" key={id}>

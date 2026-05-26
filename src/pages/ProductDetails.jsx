@@ -5,15 +5,17 @@ import { addToCart } from '../redux/cartSlice';
 import { useDispatch } from 'react-redux';
 import { ShoppingCart, ArrowLeft, Loader2, Star, ShieldCheck, Truck } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { getProductId, getProductName, getProductDesc, getProductPrice, getProductImage, getAllProductImages, getCategoryId } from '../api/productHelpers';
 
 export default function ProductDetails() {
   const { id } = useParams();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,8 +25,9 @@ export default function ProductDetails() {
         const data = await GetProduct(id);
         if (data) {
           setProduct(data);
-          const catId = data.CategoryId || data.categoryId || data.productCategoryID;
-          const relatedData = await GetRelatedCategoryProducts(catId, id, 4);
+          setSelectedImageIndex(0);
+          const catId = getCategoryId(data);
+          const relatedData = await GetRelatedCategoryProducts(catId, parseInt(id), 4);
           if (relatedData) setRelated(relatedData);
         }
       } catch (error) {
@@ -53,12 +56,12 @@ export default function ProductDetails() {
     );
   }
 
-  const pId = product.ProductId || product.productId || product.productID || id;
-  const pName = product.name || product.Name || product.productName || product.ProductName;
-  const pDesc = product.description || product.Description;
-  const pPrice = product.price || product.Price;
-  const pImgRaw = product.ImageUrl || product.imageUrl || product.imagePath || product.ImagePath || product.imageURL || product.ImageURL;
-  const pImg = pImgRaw || '/perfume_gold_1776084751454.png';
+  const pId = getProductId(product, id);
+  const pName = getProductName(product, lang);
+  const pDesc = getProductDesc(product, lang);
+  const pPrice = getProductPrice(product);
+  const allImages = getAllProductImages(product);
+  const pImg = allImages[selectedImageIndex] || allImages[0];
   const cName = product.categoryName || product.CategoryName || 'Fragrance';
 
   return (
@@ -73,6 +76,24 @@ export default function ProductDetails() {
             <div className="main-img-wrapper">
               <img src={pImg} alt={pName} />
             </div>
+            {allImages.length > 1 && (
+              <div className="product-thumbnails" style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', justifyContent: 'center' }}>
+                {allImages.map((imgUrl, i) => (
+                  <div 
+                    key={i}
+                    onClick={() => setSelectedImageIndex(i)}
+                    style={{ 
+                      width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden', cursor: 'pointer',
+                      border: selectedImageIndex === i ? '2px solid var(--primary-color)' : '2px solid transparent',
+                      opacity: selectedImageIndex === i ? 1 : 0.6,
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    <img src={imgUrl} alt={`${pName} ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="product-info-detailed">
@@ -82,11 +103,17 @@ export default function ProductDetails() {
               <div className="stars">
                 {[...Array(5)].map((_, i) => <Star key={i} size={16} fill={i < 4 ? "var(--primary-color)" : "none"} stroke="var(--primary-color)" />)}
               </div>
-              <span>(12 Reviews)</span>
+              {product.likesCount > 0 && <span>({product.likesCount || 0} Likes)</span>}
             </div>
             
             <p className="product-price-large">{pPrice} EGP</p>
             <p className="product-description-detailed">{pDesc}</p>
+
+            {product.quantityInStock !== undefined && (
+              <p style={{ color: product.quantityInStock > 0 ? '#4BB543' : '#ff4444', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                {product.quantityInStock > 0 ? `✓ In Stock (${product.quantityInStock} available)` : '✗ Out of Stock'}
+              </p>
+            )}
 
             <div className="product-features">
               <div className="feature">
@@ -113,12 +140,11 @@ export default function ProductDetails() {
           <section className="related-products" style={{ marginTop: '5rem' }}>
             <h2 className="section-title">You May Also Like</h2>
             <div className="perfume-grid">
-              {related.map((item) => {
-                const rId = item.ProductId || item.productId || item.productID;
-                const rName = item.name || item.Name || item.productName || item.ProductName;
-                const rPrice = item.price || item.Price;
-                const rImgRaw = item.ImageUrl || item.imageUrl || item.imagePath || item.ImagePath || item.imageURL || item.ImageURL;
-                const rImg = rImgRaw || '/perfume_gold_1776084751454.png';
+              {related.map((item, i) => {
+                const rId = getProductId(item);
+                const rName = getProductName(item, lang);
+                const rPrice = getProductPrice(item);
+                const rImg = getProductImage(item, i);
                 
                 return (
                   <div 
@@ -144,3 +170,4 @@ export default function ProductDetails() {
     </div>
   );
 }
+

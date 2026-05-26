@@ -1,10 +1,9 @@
-import { API_BASE } from "./Variables";
-import axios from "axios";
+import apiClient from "./apiClient";
 
 export const GetCategories = async () => {
   try {
-    const response = await axios.get(`${API_BASE}/ProductCategory`);
-    return response.data;
+    const response = await apiClient.get('/ProductCategories');
+    return response;
   } catch (error) {
     console.error("Error fetching categories:", error);
   }
@@ -12,8 +11,8 @@ export const GetCategories = async () => {
 
 export const GetCategory = async (categoryId) => {
   try {
-    const response = await axios.get(`${API_BASE}/ProductCategory/${categoryId}`);
-    return response.data;
+    const response = await apiClient.get(`/ProductCategories/${categoryId}`);
+    return response;
   } catch (error) {
     console.error("Error fetching category:", error);
   }

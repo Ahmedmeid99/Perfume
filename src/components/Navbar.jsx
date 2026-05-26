@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { ShoppingBag, User, LogOut } from 'lucide-react';
+import { ShoppingBag, User, LogOut, ChevronDown, ClipboardList, Lock } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/userSlice';
 
@@ -10,6 +10,7 @@ export default function Navbar() {
   const dispatch = useDispatch();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const cartQuantity = useSelector(state => state.cart.totalQuantity);
   const { currentUser, isAuthenticated } = useSelector(state => state.user);
 
@@ -89,13 +90,62 @@ export default function Navbar() {
           {cartQuantity > 0 && <span className="cart-badge">{cartQuantity}</span>}
         </Link>
 
-        <div className="user-nav">
+        <div className="user-nav" style={{ position: 'relative' }}>
           {isAuthenticated ? (
-            <div className="user-menu-trigger">
-              <button className="nav-icon-btn" onClick={() => dispatch(logout())} aria-label="Logout">
-                <LogOut size={22} />
+            <div className="user-menu-wrapper">
+              <button 
+                className="user-profile-trigger" 
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                aria-label="User profile"
+              >
+                <div className="user-avatar-circle">
+                  {(currentUser?.user?.userName || currentUser?.userName || 'U')[0].toUpperCase()}
+                </div>
+                <span className="user-name-text">
+                  {(currentUser?.user?.userName || currentUser?.userName || '').split(' ')[0]}
+                </span>
+                <ChevronDown size={14} className={`chevron-icon ${isUserMenuOpen ? 'open' : ''}`} />
               </button>
-              <span className="user-name-hint">{currentUser?.userName?.split(' ')[0]}</span>
+
+              {isUserMenuOpen && (
+                <>
+                  <div className="user-menu-overlay" onClick={() => setIsUserMenuOpen(false)}></div>
+                  <div className="user-dropdown-menu animate-fade-in">
+                    <div className="user-dropdown-header">
+                      <div className="user-info-avatar">
+                        {(currentUser?.user?.userName || currentUser?.userName || 'U')[0].toUpperCase()}
+                      </div>
+                      <div className="user-info-text">
+                        <h4>{currentUser?.user?.userName || currentUser?.userName}</h4>
+                        <p>{currentUser?.user?.email || currentUser?.email}</p>
+                      </div>
+                    </div>
+                    <div className="dropdown-divider"></div>
+                    <div className="user-dropdown-items">
+                      <Link
+                        className="dropdown-item"
+                        to="/my-orders"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        <ClipboardList size={16} />
+                        <span>{lang === 'en' ? 'My Orders' : 'طلباتي'}</span>
+                      </Link>
+                      <Link 
+                        className="dropdown-item" 
+                        to="/change-password"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        <Lock size={16} />
+                        <span>{lang === 'en' ? 'Change Password' : 'تغيير كلمة المرور'}</span>
+                      </Link>
+                      <button className="dropdown-item" onClick={() => { setIsUserMenuOpen(false); dispatch(logout()); }}>
+                        <LogOut size={16} />
+                        <span>{lang === 'en' ? 'Logout' : 'تسجيل الخروج'}</span>
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             <Link to="/login" className="nav-icon-btn" aria-label="Login">
