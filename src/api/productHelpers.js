@@ -1,3 +1,5 @@
+import { URL } from './Variables';
+
 /**
  * Helper utilities for extracting product fields from the .NET API response.
  * 
@@ -16,6 +18,24 @@ const FALLBACK_IMAGES = [
 ];
 
 /**
+ * Resolves any relative or absolute image URL correctly.
+ * If the image path is relative (e.g. starting with '/images'), it prepends the backend host URL.
+ */
+export function getImageUrl(url) {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  if (url.startsWith('/images/')) {
+    return `${URL}${url}`;
+  }
+  if (url.startsWith('images/')) {
+    return `${URL}/${url}`;
+  }
+  return url;
+}
+
+/**
  * Extract the best available image URL from a product object.
  * Checks productImages array first, then falls back to top-level imageUrl.
  */
@@ -28,13 +48,13 @@ export function getProductImage(product, fallbackIndex = 0) {
     // Sort by imageOrder if available, pick the first
     const sorted = [...images].sort((a, b) => (a.imageOrder || 0) - (b.imageOrder || 0));
     const url = sorted[0].imageUrl || sorted[0].imageURL || sorted[0].ImageUrl || sorted[0].ImageURL;
-    if (url) return url;
+    if (url) return getImageUrl(url);
   }
 
   // Fallback to top-level image fields
   const topLevel = product.imageUrl || product.ImageUrl || product.imageURL || product.ImageURL 
                 || product.imagePath || product.ImagePath;
-  if (topLevel) return topLevel;
+  if (topLevel) return getImageUrl(topLevel);
 
   // Final fallback
   return FALLBACK_IMAGES[fallbackIndex % FALLBACK_IMAGES.length];
@@ -49,12 +69,12 @@ export function getAllProductImages(product) {
   const images = product.productImages || product.ProductImages || [];
   if (images.length > 0) {
     const sorted = [...images].sort((a, b) => (a.imageOrder || 0) - (b.imageOrder || 0));
-    return sorted.map(img => img.imageUrl || img.imageURL || img.ImageUrl || img.ImageURL).filter(Boolean);
+    return sorted.map(img => getImageUrl(img.imageUrl || img.imageURL || img.ImageUrl || img.ImageURL)).filter(Boolean);
   }
 
   const topLevel = product.imageUrl || product.ImageUrl || product.imageURL || product.ImageURL
                 || product.imagePath || product.ImagePath;
-  if (topLevel) return [topLevel];
+  if (topLevel) return [getImageUrl(topLevel)];
 
   return [FALLBACK_IMAGES[0]];
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { GetCategories } from '../api/Category';
 import { Loader2 } from 'lucide-react';
+import { getImageUrl } from '../api/productHelpers';
 
 // Gradient backgrounds per category index
 const CARD_GRADIENTS = [
@@ -65,11 +66,12 @@ export default function DepartmentsSection() {
 
 
               // Safely extract category image from categoryImages or CategoryImages array
-              const catImg = (cat.categoryImages && cat.categoryImages.length > 0) 
+              const rawCatImg = (cat.categoryImages && cat.categoryImages.length > 0) 
                 ? cat.categoryImages[0].imageUrl 
                 : (cat.CategoryImages && cat.CategoryImages.length > 0)
                   ? cat.CategoryImages[0].imageUrl
                   : null;
+              const catImg = getImageUrl(rawCatImg);
 
               return (
                 <Link
