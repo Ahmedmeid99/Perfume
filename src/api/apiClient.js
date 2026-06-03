@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { API_BASE } from './Variables';
+import { store } from '../redux/store';
+import { logout } from '../redux/userSlice';
 
 const apiClient = axios.create({
   baseURL: API_BASE,
@@ -46,6 +48,15 @@ apiClient.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    // Check if the error status is 401 Unauthorized (e.g. token expired/invalid)
+    if (error.response?.status === 401) {
+      // Clear auth state and redirect to login if not already on the login page
+      store.dispatch(logout());
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+    }
+
     // If the error response itself is wrapped in ApiResponse, try to extract its error message
     if (error.response?.data?.message) {
       error.message = error.response.data.message;
