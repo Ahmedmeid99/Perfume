@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { GetUserOrders } from '../api/Order';
-import { CreateReview, GetProductReviews } from '../api/Review';
+import { CreateReview } from '../api/Review';
 import {
   ShoppingBag, Star, X, CheckCircle, Loader2,
   Package, Clock, ChevronDown, ChevronUp, MessageSquare
@@ -23,7 +23,7 @@ const STATUS_MAP = {
 function StatusBadge({ status, lang }) {
   const info = STATUS_MAP[status] || { en: 'Unknown', ar: 'غير معروف', color: '#888' };
   return (
-    <span className="order-status-badge" style={{ background: info.color + '22', color: info.color, border: `1px solid ${info.color}55` }}>
+    <span className="order-status-badge" style={{ background: info.color + '15', color: info.color, border: `1px solid ${info.color}35` }}>
       {lang === 'en' ? info.en : info.ar}
     </span>
   );
@@ -33,7 +33,7 @@ function StatusBadge({ status, lang }) {
 function StarRating({ value, onChange, readonly = false, size = 24 }) {
   const [hovered, setHovered] = useState(0);
   return (
-    <div className="star-rating" style={{ display: 'flex', gap: '4px' }}>
+    <div className="star-rating" style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
       {[1, 2, 3, 4, 5].map(star => (
         <button
           key={star}
@@ -47,8 +47,8 @@ function StarRating({ value, onChange, readonly = false, size = 24 }) {
         >
           <Star
             size={size}
-            fill={(hovered || value) >= star ? '#f59e0b' : 'none'}
-            color={(hovered || value) >= star ? '#f59e0b' : '#555'}
+            fill={(hovered || value) >= star ? 'var(--primary-color)' : 'none'}
+            color={(hovered || value) >= star ? 'var(--primary-color)' : '#555'}
             style={{ transition: 'all 0.15s ease' }}
           />
         </button>
@@ -85,30 +85,30 @@ function RatingModal({ product, userId, lang, onClose, onSuccess }) {
 
   return (
     <div className="rating-modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="rating-modal-card animate-fade-in">
+      <div className="rating-modal-card animate-dropdown-fade">
         <button className="rating-modal-close" onClick={onClose} aria-label="Close">
-          <X size={20} />
+          <X size={18} />
         </button>
 
         {done ? (
-          <div className="rating-modal-success">
-            <CheckCircle size={56} color="#10b981" />
+          <div className="rating-modal-success" style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+            <CheckCircle size={56} style={{ color: 'var(--primary-color)', margin: '0 auto 1.5rem', display: 'block' }} />
             <h3>{lang === 'en' ? 'Review Submitted!' : 'تم إرسال التقييم!'}</h3>
-            <p>{lang === 'en' ? 'Thank you for your feedback.' : 'شكراً على ملاحظاتك.'}</p>
+            <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>{lang === 'en' ? 'Thank you for your feedback.' : 'شكراً على ملاحظاتك.'}</p>
           </div>
         ) : (
           <>
-            <div className="rating-modal-header">
-              <Star size={28} fill="#f59e0b" color="#f59e0b" />
+            <div className="rating-modal-header" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <Star size={24} fill="var(--primary-color)" color="var(--primary-color)" />
               <h2>{lang === 'en' ? 'Rate Product' : 'قيّم المنتج'}</h2>
             </div>
 
-            <p className="rating-product-name">{product.productName}</p>
+            <p className="rating-product-name" style={{ fontWeight: '600', fontSize: '1.1rem', marginBottom: '1.5rem' }}>{product.productName}</p>
 
-            <div className="rating-stars-wrapper">
-              <StarRating value={rating} onChange={setRating} size={36} />
+            <div className="rating-stars-wrapper" style={{ margin: '1.5rem 0', textAlign: 'center' }}>
+              <StarRating value={rating} onChange={setRating} size={32} />
               {rating > 0 && (
-                <span className="rating-label">
+                <span className="rating-label" style={{ display: 'block', marginTop: '0.8rem', fontWeight: '500', color: 'var(--primary-color)' }}>
                   {['', lang === 'en' ? 'Poor' : 'سيء', lang === 'en' ? 'Fair' : 'مقبول',
                      lang === 'en' ? 'Good' : 'جيد', lang === 'en' ? 'Very Good' : 'جيد جداً',
                      lang === 'en' ? 'Excellent' : 'ممتاز'][rating]}
@@ -116,24 +116,36 @@ function RatingModal({ product, userId, lang, onClose, onSuccess }) {
               )}
             </div>
 
-            <div className="rating-textarea-wrapper">
-              <MessageSquare size={16} style={{ opacity: 0.5, marginBottom: '0.5rem' }} />
+            <div className="rating-textarea-wrapper" style={{ position: 'relative', marginBottom: '1.5rem' }}>
               <textarea
                 className="rating-textarea"
                 placeholder={lang === 'en' ? 'Share your experience (optional)...' : 'شارك تجربتك (اختياري)...'}
                 value={reviewText}
                 onChange={e => setReviewText(e.target.value)}
                 maxLength={500}
-                rows={3}
+                rows={4}
+                style={{
+                  width: '100%',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-light)',
+                  borderRadius: '12px',
+                  padding: '1rem',
+                  fontSize: '0.95rem',
+                  resize: 'none',
+                  outline: 'none'
+                }}
               />
-              <span className="char-count">{reviewText.length}/500</span>
+              <span className="char-count" style={{ position: 'absolute', bottom: '10px', right: '10px', fontSize: '0.75rem', opacity: 0.5 }}>
+                {reviewText.length}/500
+              </span>
             </div>
 
-            {error && <p className="rating-error">{error}</p>}
+            {error && <p className="rating-error" style={{ color: '#ef4444', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</p>}
 
-            <button className="rating-submit-btn" onClick={handleSubmit} disabled={submitting}>
+            <button className="cta-button-redesigned rating-submit-btn" onClick={handleSubmit} disabled={submitting} style={{ width: '100%', padding: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
               {submitting ? <Loader2 size={18} className="spinner" /> : <Star size={18} />}
-              {lang === 'en' ? 'Submit Review' : 'إرسال التقييم'}
+              <span>{lang === 'en' ? 'Submit Review' : 'إرسال التقييم'}</span>
             </button>
           </>
         )}
@@ -145,7 +157,7 @@ function RatingModal({ product, userId, lang, onClose, onSuccess }) {
 /* ─── Single Order Card ───────────────────────────────────── */
 function OrderCard({ order, userId, lang, reviewedProducts, onReviewed }) {
   const [expanded, setExpanded] = useState(false);
-  const [ratingTarget, setRatingTarget] = useState(null); // product to rate
+  const [ratingTarget, setRatingTarget] = useState(null);
 
   const date = new Date(order.orderDate).toLocaleDateString(
     lang === 'ar' ? 'ar-EG' : 'en-GB',
@@ -155,70 +167,74 @@ function OrderCard({ order, userId, lang, reviewedProducts, onReviewed }) {
   const canRate = order.status === 5; // Delivered
 
   return (
-    <div className="order-card animate-view reveal active">
+    <div className="order-card-new animate-view reveal active">
       {/* Header */}
-      <div className="order-card-header" onClick={() => setExpanded(p => !p)}>
-        <div className="order-card-left">
-          <div className="order-icon-wrap">
-            <Package size={20} />
+      <div className="order-card-header-new" onClick={() => setExpanded(p => !p)}>
+        <div className="order-header-left">
+          <div className="order-icon-box">
+            <Package size={18} />
           </div>
           <div>
-            <p className="order-id">#{lang === 'en' ? 'Order' : 'طلب'} {order.orderId}</p>
-            <p className="order-date">
-              <Clock size={13} style={{ verticalAlign: 'middle', marginInlineEnd: '4px' }} />
-              {date}
+            <p className="order-id-txt">#{lang === 'en' ? 'Order' : 'طلب'} {order.orderId}</p>
+            <p className="order-date-txt">
+              <Clock size={12} />
+              <span>{date}</span>
             </p>
           </div>
         </div>
-        <div className="order-card-right">
+        
+        <div className="order-header-right">
           <StatusBadge status={order.status} lang={lang} />
-          <span className="order-total">
-            {order.totalAmount?.toFixed(2)} <span style={{ opacity: 0.6 }}>EGP</span>
+          <span className="order-price-txt">
+            {order.totalAmount?.toFixed(2)} <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>EGP</span>
           </span>
-          {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </div>
       </div>
 
       {/* Items */}
       {expanded && (
-        <div className="order-items-list">
-          {order.orderItems?.map(item => {
-            const alreadyRated = reviewedProducts.includes(item.productId);
-            return (
-              <div key={item.orderItemId} className="order-item-row">
-                <div className="order-item-info">
-                  <span className="order-item-name">{item.productName}</span>
-                  <span className="order-item-meta">
-                    x{item.quantity} · {item.price?.toFixed(2)} EGP
-                  </span>
+        <div className="order-expanded-details">
+          <div className="order-items-list-new">
+            {order.orderItems?.map(item => {
+              const alreadyRated = reviewedProducts.includes(item.productId);
+              return (
+                <div key={item.orderItemId} className="order-item-row-new">
+                  <div className="item-info-meta">
+                    <span className="item-name-txt">{item.productName}</span>
+                    <span className="item-qty-price">
+                      x{item.quantity} · {item.price?.toFixed(2)} EGP
+                    </span>
+                  </div>
+                  <div className="item-row-right">
+                    <span className="item-subtotal-txt">{item.totalPrice?.toFixed(2)} EGP</span>
+                    {canRate && (
+                      alreadyRated ? (
+                        <span className="already-rated-pill">
+                          <Star size={12} fill="var(--primary-color)" color="var(--primary-color)" />
+                          <span>{lang === 'en' ? 'Rated' : 'تم التقييم'}</span>
+                        </span>
+                      ) : (
+                        <button
+                          className="item-rate-trigger-btn"
+                          onClick={() => setRatingTarget(item)}
+                        >
+                          <Star size={13} />
+                          <span>{lang === 'en' ? 'Rate' : 'قيّم'}</span>
+                        </button>
+                      )
+                    )}
+                  </div>
                 </div>
-                <div className="order-item-actions">
-                  <span className="order-item-total">{item.totalPrice?.toFixed(2)} EGP</span>
-                  {canRate && (
-                    alreadyRated ? (
-                      <span className="already-rated-badge">
-                        <Star size={13} fill="#f59e0b" color="#f59e0b" />
-                        {lang === 'en' ? 'Rated' : 'تم التقييم'}
-                      </span>
-                    ) : (
-                      <button
-                        className="rate-product-btn"
-                        onClick={() => setRatingTarget(item)}
-                      >
-                        <Star size={14} />
-                        {lang === 'en' ? 'Rate' : 'قيّم'}
-                      </button>
-                    )
-                  )}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+          
           {!canRate && order.status !== 6 && order.status !== 7 && (
-            <p className="rate-note">
-              {lang === 'en'
-                ? '⭐ You can rate products once the order is delivered.'
-                : '⭐ يمكنك تقييم المنتجات بعد تسليم الطلب.'}
+            <p className="rate-hint-note">
+              ⭐ {lang === 'en'
+                ? 'You can rate products once the order is delivered.'
+                : 'يمكنك تقييم المنتجات بعد تسليم الطلب.'}
             </p>
           )}
         </div>
@@ -277,21 +293,20 @@ export default function MyOrders() {
     setReviewedProducts(prev => [...prev, productId]);
   }, []);
 
-  /* ── Render ── */
   return (
-    <div className="my-orders-page" style={{ paddingTop: '120px', minHeight: '100vh', background: 'var(--bg-color)' }}>
+    <div className="my-orders-page-wrapper" style={{ paddingTop: '140px', minHeight: '100vh', background: 'var(--bg-color)' }}>
       <div className="container">
 
         {/* Page Title */}
-        <div className="my-orders-header animate-view reveal active">
-          <div className="my-orders-title-wrap">
-            <ShoppingBag size={32} style={{ color: 'var(--primary-color)' }} />
+        <div className="orders-page-header animate-view reveal active">
+          <div className="orders-header-title-flex">
+            <ShoppingBag size={28} className="orders-title-icon" />
             <div>
-              <h1 className="section-title" style={{ marginBottom: '0.2rem' }}>
+              <h1 className="orders-main-title">
                 {lang === 'en' ? 'My Orders' : 'طلباتي'}
               </h1>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                {lang === 'en' ? 'Track & rate your purchases' : 'تتبع وقيّم مشترياتك'}
+              <p className="orders-subtitle-txt">
+                {lang === 'en' ? 'Track and review your purchases' : 'تتبع وقيّم مشترياتك'}
               </p>
             </div>
           </div>
@@ -299,30 +314,30 @@ export default function MyOrders() {
 
         {/* Content */}
         {loading ? (
-          <div className="orders-loading">
-            <Loader2 size={40} className="spinner" style={{ color: 'var(--primary-color)' }} />
-            <p>{lang === 'en' ? 'Loading your orders...' : 'جارٍ تحميل طلباتك...'}</p>
+          <div className="catalog-loader" style={{ padding: '6rem 0' }}>
+            <Loader2 size={40} className="spinner" />
+            <p>{lang === 'en' ? 'Loading orders...' : 'جارٍ تحميل طلباتك...'}</p>
           </div>
         ) : error ? (
-          <div className="orders-error">
+          <div className="catalog-empty-state" style={{ padding: '4rem 1rem' }}>
             <p>{error}</p>
-            <button className="cta-button solid" onClick={fetchOrders}>
+            <button className="cta-button-redesigned" onClick={fetchOrders} style={{ marginTop: '1.5rem' }}>
               {lang === 'en' ? 'Retry' : 'إعادة المحاولة'}
             </button>
           </div>
         ) : orders.length === 0 ? (
-          <div className="orders-empty animate-view reveal active">
-            <ShoppingBag size={80} style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }} />
+          <div className="catalog-empty-state" style={{ padding: '6rem 1rem' }}>
+            <ShoppingBag size={64} style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }} />
             <h2>{lang === 'en' ? 'No orders yet' : 'لا توجد طلبات بعد'}</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
               {lang === 'en' ? 'Your order history will appear here.' : 'سيظهر سجل طلباتك هنا.'}
             </p>
-            <button className="cta-button solid" onClick={() => navigate('/perfumes')}>
+            <button className="cta-button-redesigned" onClick={() => navigate('/')}>
               {lang === 'en' ? 'Start Shopping' : 'ابدأ التسوق'}
             </button>
           </div>
         ) : (
-          <div className="orders-list">
+          <div className="orders-cards-list-wrapper">
             {orders.map(order => (
               <OrderCard
                 key={order.orderId}

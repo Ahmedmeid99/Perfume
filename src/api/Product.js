@@ -2,7 +2,7 @@ import apiClient from "./apiClient";
 
 export const GetAllProducts = async () => {
   try {
-    const response = await apiClient.get('/Products');
+    const response = await apiClient.get('/Products/own');
     return response;
   } catch (error) {
     console.error("Error fetching all products:", error);
@@ -16,7 +16,7 @@ export const GetPaginatedProducts = async (pageNumber, pageSize) => {
     // or map it to standard query params on GET /Products if supported.
     // Let's check: GET /Products returns all company products. We can pass pagination if supported,
     // or fallback to getting all and slicing on client side.
-    const response = await apiClient.get(`/Products`);
+    const response = await apiClient.get(`/Products/own`);
     return response;
   } catch (error) {
     console.error("Error fetching paginated products:", error);

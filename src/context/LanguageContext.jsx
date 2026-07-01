@@ -1,51 +1,74 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext } from "react";
 
 const content = {
   en: {
-    brand: "Sam Perfumes",
+    brand: "My Store",
+    topHot: "HOT 🔥",
+    topCollaboration: "Collaboration",
+    topComingSoon: "Coming Soon",
+    topDiscount: "Discount",
+    topReviews: "Reviews",
+    topContact: "Contact",
+    topLocation: "Abu Kabir, Egypt",
     navProcess: "Our Story",
     navEssence: "Essence",
     navConsult: "Custom Blend",
     navGallery: "Gallery",
-    galleryTitle: "SAM Creations",
-    galleryDesc: "A visual journey into our world of premium perfumery.",
+    navHome: "Home",
+    navOrders: "My Orders",
+    galleryTitle: "Our Gallery",
+    galleryDesc: "A visual journey into our world of premium products.",
     bookNow: "Contact Us",
-    heroSubtitle: "Premium Fragrances",
-    heroTitle: "Elegance in Every Drop",
-    heroDesc: "SAM Perfumes (سام للعطور) offers an exclusive collection of compositions, bakhoor, and body mists tailored to your personality. Experience the essence of luxury.",
+    heroSubtitle: "Premium Products",
+    heroTitle: "Quality in Every Choice",
+    heroDesc:
+      "We offer an exclusive collection of premium products tailored to your lifestyle. Experience the essence of quality and elegance.",
     beginJourney: "Explore Collection",
     section1Title: "The World of ",
-    section1Span: "SAM",
-    section1Desc: "We craft more than just scents; we bottle memories and emotions. From traditional Bakhoor to modern Hair Mists, our quality is unparalleled.",
+    section1Span: "Quality",
+    section1Desc:
+      "We offer more than just products; we deliver experiences and value. From classic essentials to modern innovations, our quality is unparalleled.",
     step1Title: "Selection",
-    step1Desc: "Choose from our curated range of compositions and essential oils, sourced from the finest ingredients worldwide.",
-    step2Title: "Blending",
-    step2Desc: "Our artisans meticulously blend notes to create harmony, ensuring each batch meets the high standards of SAM.",
-    step3Title: "Perfection",
-    step3Desc: "Each bottle is a testament to our dedication, packaged with elegance and delivered to your doorstep.",
+    step1Desc:
+      "Choose from our curated range of premium products, sourced from the finest suppliers worldwide.",
+    step2Title: "Quality Check",
+    step2Desc:
+      "Our team meticulously reviews every item to ensure it meets the highest quality standards before reaching you.",
+    step3Title: "Delivery",
+    step3Desc:
+      "Each order is a testament to our dedication, packaged with care and delivered straight to your doorstep.",
     qualitySubtitle: "Exquisite Quality",
-    qualityTitle: "Finest Ingredients",
-    qualityP1: "Luxury begins with the ingredients. We source the rarest ouds, musks, and florals to ensure your fragrance is long-lasting and unique.",
-    qualityP2: "Our traditions meet modern techniques to bring you products like our signature Makhmariyat and premium Body Splashes.",
-    exploreSourcing: "Our Ingredients",
-    ctaTitle: "Find Your Signature Scent",
-    ctaDesc: "Discover the collection that has captivated scent enthusiasts. From traditional to contemporary, SAM has it all.",
+    qualityTitle: "Premium Products",
+    qualityP1:
+      "Quality begins with sourcing. We partner with the best suppliers to ensure every product is long-lasting, authentic, and unique.",
+    qualityP2:
+      "Our expertise meets modern standards to bring you a curated selection of premium products for every occasion.",
+    exploreSourcing: "Our Products",
+    ctaTitle: "Find Your Perfect Product",
+    ctaDesc:
+      "Discover the collection that has captivated customers worldwide. From classic essentials to modern picks, we have it all.",
     reserveConsult: "Get Your Custom Blend",
-    sourcingHeroTitle: "Ethical & Pure",
-    sourcingDesc: "We pride ourselves on using pure materials that respect both tradition and nature.",
+    sourcingHeroTitle: "Ethical & Premium",
+    sourcingDesc:
+      "We pride ourselves on offering products that respect both quality and customer satisfaction.",
     contactHeroTitle: "Get in Touch",
-    contactDesc: "Reach out to us for bulk orders, custom blends, or any inquiries about our premium collections.",
-    processIntro: "Whether you seek the deep aroma of Bakhoor or the refreshing mist of a Body Splash, SAM is your destination for quality.",
-    processDetail1: "Our range includes Hair Mists and Makhmariyat, designed to linger beautifully throughout the day.",
-    essenceDetails: "We use high-concentration oils for our compositions, ensuring a rich fragrance profile that evolves on the skin.",
-    consultationDetails: "Interested in a custom blend? Our experts can help you create a scent that is uniquely yours.",
+    contactDesc:
+      "Reach out to us for bulk orders, special requests, or any inquiries about our premium collections.",
+    processIntro:
+      "Whether you are looking for everyday essentials or something special, we are your destination for quality.",
+    processDetail1:
+      "Our range is carefully selected and designed to bring value and satisfaction to your daily life.",
+    essenceDetails:
+      "We source high-quality items for our catalog, ensuring a rich product profile that meets your every need.",
+    consultationDetails:
+      "Interested in a custom order? Our experts can help you find or create exactly what you are looking for.",
     formName: "Full Name",
     formEmail: "Email Address",
     formMessage: "How can we help?",
     formSubmit: "Send Message",
     formSuccess: "Thank you. We will contact you shortly.",
-    teamTitle: "The Artisans",
-    teamDesc: "Meet the experts behind the SAM signature scents.",
+    teamTitle: "Our Team",
+    teamDesc: "Meet the passionate experts behind our products and services.",
     teamRole1: "Master Perfumer",
     teamName1: "El Sayed Nasser",
     teamRole2: "Bakhoor Specialist",
@@ -53,22 +76,26 @@ const content = {
     teamRole3: "Product Designer",
     teamName3: "Maryam",
     reviewsTitle: "What They Say",
-    reviewsDesc: "Customer experiences with SAM Perfumes.",
-    review1: "\"The Bakhoor is the best I have ever used. It fills the room with such a rich, calming aroma.\"",
+    reviewsDesc: "Real customer experiences with our products.",
+    review1:
+      '"The Bakhoor is the best I have ever used. It fills the room with such a rich, calming aroma."',
     reviewer1: "M. Abdelsalam",
-    review2: "\"Their Hair Mist stays for hours. I get compliments everywhere I go. Truly premium!\"",
+    review2:
+      '"Their Hair Mist stays for hours. I get compliments everywhere I go. Truly premium!"',
     reviewer2: "Omar Hassan",
-    review3: "\"The Makhmariyat is so smooth and the fragrance is divine. A must-have in my daily routine.\"",
+    review3:
+      '"The Makhmariyat is so smooth and the fragrance is divine. A must-have in my daily routine."',
     reviewer3: "Tariq Youssef",
     mapTitle: "Our Location",
-    mapDesc: "Visit one of our branches to experience the fragrances in person.",
+    mapDesc:
+      "Visit one of our branches to experience the fragrances in person.",
     address: "Abu Kabir, Al Sharqia Governorate",
     quickLinks: "Quick Links",
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
     shippingPolicy: "Shipping Policy",
     navCollection: "The Collection",
-    searchPlaceholder: "Search perfumes...",
+    searchPlaceholder: "Search products...",
     filterAll: "All Categories",
     filterComposition: "Composition",
     filterMakhmariyat: "Makhmariyat",
@@ -76,90 +103,129 @@ const content = {
     filterHairMist: "Hair Mist",
     filterAirFresheners: "Air Fresheners",
     filterBakhoor: "Bakhoor",
-    filterGenderAll: "All Genders",
+    filterGenderAll: "All",
     filterMen: "Men",
     filterWomen: "Women",
     filterUnisex: "Unisex",
     perfume1Name: "Oud Sam",
-    perfume1Desc: "Our signature composition with deep woody notes and luxury oud.",
+    perfume1Desc:
+      "Our signature composition with deep woody notes and luxury oud.",
     perfume2Name: "Silk Makhmariya",
-    perfume2Desc: "A smooth, velvet-like scented cream that leaves a lasting impression.",
+    perfume2Desc:
+      "A smooth, velvet-like scented cream that leaves a lasting impression.",
     perfume3Name: "Tropical Splash",
     perfume3Desc: "A refreshing body splash with citrus and sea breeze notes.",
     perfume4Name: "Rose Hair Mist",
-    perfume4Desc: "Delicate fragrance for your hair, infused with vitamins and floral notes.",
+    perfume4Desc:
+      "Delicate fragrance for your hair, infused with vitamins and floral notes.",
     perfume5Name: "Home Oud",
-    perfume5Desc: "A powerful air freshener that brings the luxury of the orient home.",
+    perfume5Desc:
+      "A powerful air freshener that brings the luxury of the orient home.",
     perfume6Name: "Royal Bakhoor",
-    perfume6Desc: "A traditional incense experience with slow-burning, rich wooden chips.",
+    perfume6Desc:
+      "A traditional incense experience with slow-burning, rich wooden chips.",
     noMatches: "No products found in this category.",
     deptSectionTitle: "Our Departments",
-    deptSectionDesc: "Explore our exclusive range of premium fragrance products.",
+    deptSectionDesc: "Explore our exclusive range of premium products.",
     deptCompositionTitle: "Composition",
-    deptCompositionDesc: "Custom fragrance blends crafted for your unique identity.",
+    deptCompositionDesc:
+      "Custom fragrance blends crafted for your unique identity.",
     deptMakhmariyatTitle: "Makhmariyat",
-    deptMakhmariyatDesc: "Luxurious scented creams for deep, long-lasting skin fragrance.",
+    deptMakhmariyatDesc:
+      "Luxurious scented creams for deep, long-lasting skin fragrance.",
     deptBodySplashTitle: "Body Splash",
-    deptBodySplashDesc: "Light, refreshing mists to keep you feeling fresh all day.",
+    deptBodySplashDesc:
+      "Light, refreshing mists to keep you feeling fresh all day.",
     deptHairMistTitle: "Hair Mist",
-    deptHairMistDesc: "Gentle fragrance sprays designed specifically for hair care.",
+    deptHairMistDesc:
+      "Gentle fragrance sprays designed specifically for hair care.",
     deptAirFreshenersTitle: "Air Fresheners",
-    deptAirFreshenersDesc: "Premium home fragrances to elevate your living space.",
+    deptAirFreshenersDesc:
+      "Premium home fragrances to elevate your living space.",
     deptBakhoorTitle: "Bakhoor",
-    deptBakhoorDesc: "Traditional incense and oud chips for a truly royal atmosphere.",
+    deptBakhoorDesc:
+      "Traditional incense and oud chips for a truly royal atmosphere.",
     exploreBtn: "Explore",
     footerInfo: "Information",
     giftSubtitle: "The Perfect Gift",
-    giftTitle: "Art of Gifting",
-    giftDesc1: "Show your appreciation with the ultimate gesture of luxury. Whether it's for a special occasion or a meaningful surprise, SAM Perfumes offers bespoke gift wrapping that elevates your present into an unforgettable experience.",
-    giftDesc2: "Select your favorite composition, and let our artisans package it with elegance, ribbon, and a personalized note.",
-    giftBtn: "Explore Gifts"
+    giftTitle: "Gift with Style",
+    giftDesc1:
+      "Show your appreciation with the ultimate gesture of luxury. Whether it's for a special occasion or a meaningful surprise, our store offers bespoke gift wrapping that elevates your present into an unforgettable experience.",
+    giftDesc2:
+      "Select your favorite composition, and let our artisans package it with elegance, ribbon, and a personalized note.",
+    giftBtn: "Explore Gifts",
+    favoritesTitle: "My Favorites",
+    favoritesEmpty: "Your favorites list is empty.",
+    favoritesGoToShop: "Explore Products",
+    removedFromFavorites: "Removed from favorites",
   },
   ar: {
-    brand: "سام للعطور",
+    brand: "متجري",
+    topHot: "عروض حارة 🔥",
+    topCollaboration: "تعاون",
+    topComingSoon: "قريباً",
+    topDiscount: "خصومات",
+    topReviews: "الآراء",
+    topContact: "اتصل بنا",
+    topLocation: "أبو كبير، مصر",
     navProcess: "قصتنا",
     navEssence: "الخلاصة",
     navConsult: "تركيب خاص",
     navGallery: "المعرض",
-    galleryTitle: "إبداعات سام",
-    galleryDesc: "رحلة بصرية في عالمنا للعطور الفاخرة.",
+    navHome: "الرئيسية",
+    navOrders: "طلباتي",
+    galleryTitle: "معرضنا",
+    galleryDesc: "رحلة بصرية في عالم منتجاتنا الفاخرة.",
     bookNow: "تواصل معنا",
-    heroSubtitle: "عطور فاخرة",
-    heroTitle: "الأناقة في كل قطرة",
-    heroDesc: "سام للعطور (SAM Perfumes) تقدم مجموعة حصرية من التركيبات، البخور، ومعطرات الجسم المصممة لتناسب شخصيتك. جرب جوهر الفخامة.",
+    heroSubtitle: "منتجات فاخرة",
+    heroTitle: "الجودة في كل اختيار",
+    heroDesc:
+      "نقدم مجموعة حصرية من المنتجات الفاخرة المصممة لتناسب أسلوب حياتك. جرب جوهر الجودة والأناقة.",
     beginJourney: "استكشف المجموعة",
     section1Title: "عالم ",
-    section1Span: "سام",
-    section1Desc: "نحن نصنع أكثر من مجرد روائح؛ نحن نعلب الذكريات والعواطف. من البخور التقليدي إلى معطرات الشعر الحديثة، جودتنا لا تضاهى.",
+    section1Span: "الجودة",
+    section1Desc:
+      "نقدم أكثر من مجرد منتجات؛ نقدم تجارب وقيمة حقيقية. من الأساسيات الكلاسيكية إلى الابتكارات الحديثة، جودتنا لا تضاهى.",
     step1Title: "الاختيار",
-    step1Desc: "اختر من بين مجموعتنا المختارة من التركيبات والزيوت العطرية، المستوردة من أفضل المكونات عالميًا.",
-    step2Title: "المزيج",
-    step2Desc: "يقوم حرفيونا بمزج النوتات بدقة لخلق تناغم، مع ضمان مطابقة كل دفعة لمعايير سام العالية.",
-    step3Title: "الإتقان",
-    step3Desc: "كل زجاجة هي دليل على تفانينا، معبأة بأناقة ويتم توصيلها إلى باب منزلك.",
-    qualitySubtitle: "جودة رائعة",
-    qualityTitle: "أجود المكونات",
-    qualityP1: "تبدأ الفخامة بالمكونات. نحن نستورد أندر أنواع العود والمسك والزهور لضمان أن يكون عطرك يدوم طويلاً وفريدًا.",
-    qualityP2: "تلتقي تقاليدنا مع التقنيات الحديثة لنقدم لك منتجات مثل مخمرياتنا المميزة ومعطرات الجسم الفاخرة.",
-    exploreSourcing: "مكوناتنا",
-    ctaTitle: "ابحث عن عطرك المميز",
-    ctaDesc: "اكتشف المجموعة التي أسرت عشاق الروائح. من التقليدي إلى المعاصر، لدى سام كل شيء.",
+    step1Desc:
+      "اختر من بين مجموعتنا المختارة من المنتجات الفاخرة، المُستوردة من أفضل الموردين عالميًا.",
+    step2Title: "مراقبة الجودة",
+    step2Desc:
+      "يراجع فريقنا كل منتج بدقة لضمان مطابقته لأعلى معايير الجودة قبل وصوله إليك.",
+    step3Title: "التسليم",
+    step3Desc:
+      "كل طلب هو دليل على تفانينا، معبأ بعناية ويتم توصيله مباشرةً إلى باب منزلك.",
+    qualitySubtitle: "جودة استثنائية",
+    qualityTitle: "منتجات مميزة",
+    qualityP1:
+      "تبدأ الجودة من الاختيار الصحيح. نتعاون مع أفضل الموردين لضمان أن يكون كل منتج أصيلاً ودائماً وفريداً.",
+    qualityP2:
+      "تلتقي خبرتنا مع المعايير الحديثة لنقدم لك تشكيلة منتخبة من المنتجات الفاخرة لكل مناسبة.",
+    exploreSourcing: "منتجاتنا",
+    ctaTitle: "ابحث عن منتجك المثالي",
+    ctaDesc:
+      "اكتشف المجموعة التي أسرت العملاء حول العالم. من الكلاسيكيات إلى المنتجات العصرية، لدينا كل شيء.",
     reserveConsult: "احصل على تركيبتك الخاصة",
-    sourcingHeroTitle: "أخلاقي ونقي",
-    sourcingDesc: "نحن نفخر باستخدام مواد نقية تحترم التقاليد والطبيعة.",
+    sourcingHeroTitle: "موثوق ومتميز",
+    sourcingDesc: "نفخر بتقديم منتجات تحترم معايير الجودة ورضا العميل.",
     contactHeroTitle: "تواصل معنا",
-    contactDesc: "تواصل معنا لطلبات الجملة، التركيبات الخاصة، أو أي استفسارات حول مجموعاتنا المميزة.",
-    processIntro: "سواء كنت تبحث عن رائحة البخور العميقة أو رذاذ معطر الجسم المنعش، سام هي وجهتك للجودة.",
-    processDetail1: "تشمل مجموعتنا معطرات الشعر والمخمريات، المصممة لتبقى جميلة طوال اليوم.",
-    essenceDetails: "نحن نستخدم زيوتًا عالية التركيز لتركيباتنا، مما يضمن ملفًا عطريًا غنيًا يتطور على البشرة.",
-    consultationDetails: "هل أنت مهتم بتركيبة خاصة؟ يمكن لخبرائنا مساعدتك في إنشاء رائحة فريدة بك تمامًا.",
+    contactDesc:
+      "تواصل معنا لطلبات الجملة، الطلبات الخاصة، أو أي استفسارات حول مجموعاتنا المميزة.",
+    processIntro:
+      "سواء كنت تبحث عن أساسيات يومية أو شيء مميز، نحن وجهتك للجودة.",
+    processDetail1:
+      "مجموعتنا مختارة بعناية لتجلب قيمة حقيقية ورضا تاماً في حياتك اليومية.",
+    essenceDetails:
+      "نختار منتجاتنا بعناية فائقة لضمان تجربة غنية ومميزة تلبي كل احتياجاتك.",
+    consultationDetails:
+      "هل تريد طلباً خاصاً؟ يمكن لخبرائنا مساعدتك في إيجاد أو تخصيص ما تبحث عنه تماماً.",
     formName: "الاسم الكامل",
     formEmail: "البريد الإلكتروني",
     formMessage: "كيف يمكننا مساعدتك؟",
     formSubmit: "إرسال الرسالة",
     formSuccess: "شكرًا لك. سنتواصل معك قريبًا.",
-    teamTitle: "الحرفيون",
-    teamDesc: "تعرف على الخبراء وراء روائح سام المميزة.",
+    teamTitle: "فريقنا",
+    teamDesc: "تعرف على الخبراء المتحمسين وراء منتجاتنا وخدماتنا.",
     teamRole1: "خبير عطور",
     teamName1: "السيد ناصر",
     teamRole2: "متخصص بخور",
@@ -167,22 +233,25 @@ const content = {
     teamRole3: "مصمم منتجات",
     teamName3: "مريم",
     reviewsTitle: "ماذا يقولون",
-    reviewsDesc: "تجارب العملاء مع سام للعطور.",
-    review1: "\"البخور هو الأفضل الذي استخدمته على الإطلاق. يملأ الغرفة برائحة غنية ومهدئة.\"",
+    reviewsDesc: "تجارب حقيقية من عملائنا مع منتجاتنا.",
+    review1:
+      '"البخور هو الأفضل الذي استخدمته على الإطلاق. يملأ الغرفة برائحة غنية ومهدئة."',
     reviewer1: "م. عبد السلام",
-    review2: "\"معطر الشعر الخاص بهم يدوم لساعات. أحصل على إطراءات في كل مكان. فاخر بحق!\"",
+    review2:
+      '"معطر الشعر الخاص بهم يدوم لساعات. أحصل على إطراءات في كل مكان. فاخر بحق!"',
     reviewer2: "عمر حسن",
-    review3: "\"المخمرية ناعمة للغاية والرائحة إلهية. لا بد منها في روتيني اليومي.\"",
+    review3:
+      '"المخمرية ناعمة للغاية والرائحة إلهية. لا بد منها في روتيني اليومي."',
     reviewer3: "طارق يوسف",
     mapTitle: "موقعنا",
-    mapDesc: "قم بزيارة أحد فروعنا لتجربة العطور شخصيًا.",
+    mapDesc: "قم بزيارة أحد فروعنا لتجربة المنتجات شخصيًا.",
     address: "أبو كبير، محافظة الشرقية",
     quickLinks: "روابط سريعة",
     privacyPolicy: "سياسة الخصوصية",
     termsOfService: "شروط الخدمة",
     shippingPolicy: "سياسة الشحن",
     navCollection: "المجموعة",
-    searchPlaceholder: "ابحث عن العطور...",
+    searchPlaceholder: "ابحث عن المنتجات...",
     filterAll: "جميع الأقسام",
     filterComposition: "التركيب",
     filterMakhmariyat: "مخمريات",
@@ -208,7 +277,7 @@ const content = {
     perfume6Desc: "تجربة بخور تقليدية مع رقائق خشبية غنية وبطيئة الاحتراق.",
     noMatches: "لم يتم العثور على منتجات في هذا القسم.",
     deptSectionTitle: "أقسامنا",
-    deptSectionDesc: "استكشف مجموعتنا الحصرية من منتجات العطور الفاخرة.",
+    deptSectionDesc: "استكشف مجموعتنا الحصرية من المنتجات الفاخرة.",
     deptCompositionTitle: "التركيب",
     deptCompositionDesc: "تركيبات عطرية مخصصة مصنوعة لتعكس هويتك الفريدة.",
     deptMakhmariyatTitle: "مخمريات",
@@ -224,33 +293,41 @@ const content = {
     exploreBtn: "استكشف",
     footerInfo: "معلومات",
     giftSubtitle: "الهدية المثالية",
-    giftTitle: "فن الإهداء",
-    giftDesc1: "أظهر تقديرك بأرقى لفتة من الفخامة. سواء كان ذلك لمناسبة خاصة أو مفاجأة ذات مغزى، تقدم سام للعطور تغليف هدايا مخصص يرتقي بهديتك إلى تجربة لا تُنسى.",
-    giftDesc2: "اختر تركيبتك المفضلة، ودع حرفيينا يغلفونها بأناقة مع شريط وملاحظة شخصية.",
-    giftBtn: "استكشف الهدايا"
-  }
+    giftTitle: "أهدِ بأسلوب",
+    giftDesc1:
+      "أظهر تقديرك بأرقى لفتة من الفخامة. سواء كان ذلك لمناسبة خاصة أو مفاجأة ذات مغزى، يقدم متجرنا تغليف هدايا مخصص يرتقي بهديتك إلى تجربة لا تُنسى.",
+    giftDesc2:
+      "اختر تركيبتك المفضلة، ودع حرفيينا يغلفونها بأناقة مع شريط وملاحظة شخصية.",
+    giftBtn: "استكشف الهدايا",
+    favoritesTitle: "المفضلة",
+    favoritesEmpty: "قائمة المفضلة لديك فارغة.",
+    favoritesGoToShop: "استكشف المنتجات",
+    removedFromFavorites: "تمت الإزالة من المفضلة",
+  },
 };
 
 const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('ar');
+  const [lang, setLang] = useState("ar");
 
   const toggleLanguage = () => {
-    document.documentElement.classList.add('no-transition');
-    setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
+    document.documentElement.classList.add("no-transition");
+    setLang((prev) => (prev === "en" ? "ar" : "en"));
     setTimeout(() => {
-      document.documentElement.classList.remove('no-transition');
+      document.documentElement.classList.remove("no-transition");
     }, 50);
   };
 
   useEffect(() => {
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
     document.documentElement.lang = lang;
   }, [lang]);
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, toggleLanguage, t: content[lang] }}>
+    <LanguageContext.Provider
+      value={{ lang, setLang, toggleLanguage, t: content[lang] }}
+    >
       {children}
     </LanguageContext.Provider>
   );

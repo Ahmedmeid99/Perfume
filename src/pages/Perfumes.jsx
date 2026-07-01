@@ -11,9 +11,10 @@ import {
 } from '../api/Product';
 import { addToCart } from '../redux/cartSlice';
 import { useDispatch } from 'react-redux';
-import { ShoppingCart, Search, Loader2, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Loader2, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { getProductId, getProductName, getProductDesc, getProductPrice, getProductImage } from '../api/productHelpers';
+import ProductCard from '../components/ProductCard';
 
 export default function Perfumes() {
   const { t, lang } = useLanguage();
@@ -31,6 +32,43 @@ export default function Perfumes() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(6);
   const [totalItems, setTotalItems] = useState(0);
+  const [wishlist, setWishlist] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('wishlist') || '[]'); } catch { return []; }
+  });
+
+  useEffect(() => {
+    const update = () => {
+      try { setWishlist(JSON.parse(localStorage.getItem('wishlist') || '[]')); } catch { setWishlist([]); }
+    };
+    window.addEventListener('wishlistChanged', update);
+    return () => window.removeEventListener('wishlistChanged', update);
+  }, []);
+
+  const toggleWishlist = (id) => {
+    const updated = wishlist.includes(id) ? wishlist.filter(w => w !== id) : [...wishlist, id];
+    setWishlist(updated);
+    localStorage.setItem('wishlist', JSON.stringify(updated));
+    window.dispatchEvent(new Event('wishlistChanged'));
+  };
+
+  // Sync category state from router state (e.g. from Home banner View All click)
+  useEffect(() => {
+    if (location.state?.categoryId) {
+      setFilterCategory(location.state.categoryId);
+      setPage(1);
+    } else if (location.state === null) {
+      setFilterCategory('all');
+      setPage(1);
+    }
+  }, [location.state]);
+
+  // Sync search input from top navbar search query (URL params)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const q = params.get('search') || '';
+    setSearchQuery(q);
+    setPage(1);
+  }, [location.search]);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -45,50 +83,39 @@ export default function Perfumes() {
   }, []);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     fetchProducts();
-  }, [filterCategory, page, lang]);
+  }, [filterCategory, page, lang, searchQuery]);
+
+  // Scroll to top on page or category change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [filterCategory, page]);
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      let prods;
-      let count;
-      
+      let allProds = [];
       if (filterCategory === 'all') {
-        // Try paginated first
-        prods = await GetPaginatedProducts(page, pageSize);
-        
-        // If paginated fails (e.g. 404 on remote API), fallback to GetAll and slice
-        if (!prods) {
-          const allProds = await GetAllProducts();
-          if (allProds) {
-            count = allProds.length;
-            prods = allProds.slice((page - 1) * pageSize, page * pageSize);
-          }
-        } else {
-          count = await GetTotalProductCount();
-        }
+        allProds = await GetAllProducts();
       } else {
-        prods = await GetpaginatedCategoryProducts(filterCategory, page, pageSize);
-        
-        // Fallback for categories if paginated fails
-        if (!prods) {
-          const allCatProds = await GetAllCategoryProducts(filterCategory);
-          if (allCatProds) {
-            count = allCatProds.length;
-            prods = allCatProds.slice((page - 1) * pageSize, page * pageSize);
-          }
-        } else {
-          count = await GetCategoryProductCount(filterCategory);
-        }
+        allProds = await GetAllCategoryProducts(filterCategory);
       }
-      
-      if (prods) setProducts(prods);
-      else setProducts([]);
-      
-      if (count !== undefined) setTotalItems(count);
-      else setTotalItems(0);
+
+      if (!allProds) allProds = [];
+
+      // Filter by search query
+      const query = searchQuery ? searchQuery.trim().toLowerCase() : '';
+      const filtered = allProds.filter(p => {
+        const name = getProductName(p, lang).toLowerCase();
+        const desc = getProductDesc(p, lang).toLowerCase();
+        return !query || name.includes(query) || desc.includes(query);
+      });
+
+      // Slice for pagination
+      const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+      setProducts(paginated);
+      setTotalItems(filtered.length);
     } catch (error) {
       console.error("Error fetching perfumes:", error);
       setProducts([]);
@@ -105,17 +132,7 @@ export default function Perfumes() {
 
   const totalPages = Math.ceil(totalItems / pageSize);
 
-  const filtered = products.filter(p => {
-    const name = getProductName(p, lang);
-    const desc = getProductDesc(p, lang);
-    
-    const query = searchQuery ? searchQuery.trim().toLowerCase() : '';
-    const matchSearch = !query || 
-                        name.toLowerCase().includes(query) || 
-                        desc.toLowerCase().includes(query);
-                        
-    return matchSearch;
-  });
+  const filtered = products; // Already filtered and paginated inside fetchProducts
 
   return (
     <div style={{ paddingTop: '80px', minHeight: '100vh', background: 'var(--bg-color)' }}>
@@ -176,43 +193,24 @@ export default function Perfumes() {
                 </div>
               ) : (
                 <>
-                  <div className="perfume-grid">
+                  <div className="pc-catalog-grid">
                     {filtered.length > 0 ? filtered.map((perfume, i) => {
                       const id = getProductId(perfume, i);
                       const name = getProductName(perfume, lang);
                       const desc = getProductDesc(perfume, lang);
                       const price = getProductPrice(perfume);
                       const img = getProductImage(perfume, i);
-
                       return (
-                        <div className="perfume-card animate-view reveal active" key={id}>
-                          <div className="perfume-img-wrapper">
-                            <Link to={`/product/${id}`}>
-                              <img src={img} alt={name} />
-                            </Link>
-                            <div className="perfume-overlay">
-                              <button 
-                                className="add-to-cart-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  dispatch(addToCart({ id, name, price, img }));
-                                }}
-                              >
-                                <ShoppingCart size={20} />
-                                <span>Add to Cart</span>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="perfume-info">
-                            <div className="perfume-header">
-                              <Link to={`/product/${id}`}>
-                                <h3>{name}</h3>
-                              </Link>
-                              <span className="perfume-price">{price} EGP</span>
-                            </div>
-                            <p className="perfume-card-desc">{desc}</p>
-                          </div>
-                        </div>
+                        <ProductCard
+                          key={id}
+                          id={id}
+                          name={name}
+                          desc={desc}
+                          price={price}
+                          img={img}
+                          isLiked={wishlist.includes(id)}
+                          onToggleWishlist={toggleWishlist}
+                        />
                       );
                     }) : (
                       <p style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '3rem', color: 'var(--text-muted)' }}>{t.noMatches}</p>

@@ -35,9 +35,9 @@ export default function Footer() {
           <div className="footer-col links-col">
             <h3 style={{ color: 'var(--text-light)', marginBottom: '1rem', fontSize: '1.1rem' }}>{t.quickLinks}</h3>
             <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li style={{ marginBottom: '0.8rem' }}><Link to="/process" style={{ color: 'var(--text-muted)' }}>{t.navProcess}</Link></li>
-              <li style={{ marginBottom: '0.8rem' }}><Link to="/perfumes" style={{ color: 'var(--text-muted)' }}>{t.navCollection}</Link></li>
-              <li style={{ marginBottom: '0.8rem' }}><Link to="/sourcing" style={{ color: 'var(--text-muted)' }}>{t.exploreSourcing}</Link></li>
+              <li style={{ marginBottom: '0.8rem' }}><Link to="/" style={{ color: 'var(--text-muted)' }}>{t.navHome}</Link></li>
+              <li style={{ marginBottom: '0.8rem' }}><Link to="/gallery" style={{ color: 'var(--text-muted)' }}>{t.navGallery}</Link></li>
+              <li style={{ marginBottom: '0.8rem' }}><Link to="/my-orders" style={{ color: 'var(--text-muted)' }}>{t.navOrders}</Link></li>
             </ul>
           </div>
           <div className="footer-col links-col">
