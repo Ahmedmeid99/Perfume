@@ -48,6 +48,13 @@
 html{
       scroll-padding: 10rem;
 }
+@media (max-width: 768px) {
+
+html{  
+  scroll-padding: 14rem;
+}
+}
+
 body {
   font-family: var(--font-main);
   background-color: var(--bg-color);

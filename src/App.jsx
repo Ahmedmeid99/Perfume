@@ -21,6 +21,7 @@ import Login from "./pages/Login";
 import MyOrders from "./pages/MyOrders";
 import ChangePassword from "./pages/ChangePassword";
 import Favorites from "./pages/Favorites";
+import PolicyPage from "./pages/PolicyPage";
 import "./App.css";
 
 import { Provider } from "react-redux";
@@ -57,6 +58,18 @@ function App() {
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/favorites" element={<Favorites />} />
+              <Route
+                path="/privacy-policy"
+                element={<PolicyPage type="privacy" />}
+              />
+              <Route
+                path="/terms-of-service"
+                element={<PolicyPage type="terms" />}
+              />
+              <Route
+                path="/shipping-policy"
+                element={<PolicyPage type="shipping" />}
+              />
             </Routes>
             <FloatingWidgets />
             <Footer />

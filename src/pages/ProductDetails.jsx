@@ -32,6 +32,7 @@ export default function ProductDetails() {
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [addedAnim, setAddedAnim] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -107,6 +108,17 @@ export default function ProductDetails() {
     lang === "en"
       ? product?.category?.categoryName
       : product?.category?.categoryNameAr;
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(addToCart({ id: pId, name: pName, price: pPrice, img: pImg }));
+    setAddedAnim(true);
+    setTimeout(() => setAddedAnim(false), 900);
+  };
+
+  const addLabel = lang === "en" ? "Add to Shopping Bag" : "أضف لحقيبة التسوق";
+  const addedLabel = lang === "en" ? "Added!" : "تمت الإضافة!";
 
   return (
     <div
@@ -202,18 +214,12 @@ export default function ProductDetails() {
             </div>
 
             <button
-              className="cta-button-redesigned details-cart-submit-btn"
+              className={`cta-button-redesigned details-cart-submit-btn${addedAnim ? " details-cart-submit-btn--added" : ""}`}
               disabled={product.quantityInStock === 0}
-              onClick={() =>
-                dispatch(
-                  addToCart({ id: pId, name: pName, price: pPrice, img: pImg }),
-                )
-              }
+              onClick={handleAddToCart}
             >
               <ShoppingCart size={18} />
-              <span>
-                {lang === "en" ? "Add to Shopping Bag" : "أضف لحقيبة التسوق"}
-              </span>
+              <span>{addedAnim ? addedLabel : addLabel}</span>
             </button>
           </div>
         </div>

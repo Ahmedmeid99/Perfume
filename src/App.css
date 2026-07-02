@@ -4597,6 +4597,12 @@ a.dropdown-item {
   font-size: 1rem;
 }
 
+.details-cart-submit-btn--added {
+  background: #27ae60 !important;
+  color: #fff !important;
+  border-color: #27ae60 !important;
+}
+
 .details-related-section {
   border-top: 1px solid var(--border-color);
   padding-top: 4rem;

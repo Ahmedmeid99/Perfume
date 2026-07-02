@@ -191,7 +191,7 @@ export default function Home() {
           <span className="hero-subtitle">{t.heroSubtitle}</span>
           <h1 className="hero-title">{t.heroTitle}</h1>
           <p className="hero-desc">{t.heroDesc}</p>
-          <a href="#catalog-section" className="cta-button-redesigned">
+          <a href="/perfumes" className="cta-button-redesigned">
             {t.beginJourney}
           </a>
         </div>

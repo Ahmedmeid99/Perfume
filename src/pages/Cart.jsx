@@ -144,6 +144,7 @@ export default function Cart() {
               alignItems: "center",
               gap: "0.5rem",
               cursor: "pointer",
+              marginTop: "1rem",
             }}
           >
             <ArrowLeft size={20} />{" "}
