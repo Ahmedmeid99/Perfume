@@ -91,7 +91,10 @@ button {
   border: none;
   outline: none;
 }
-
+img ,.img,.image{
+  max-width: 100%;
+  display: block;
+}
 /* Base Animations */
 .reveal {
   opacity: 0;
