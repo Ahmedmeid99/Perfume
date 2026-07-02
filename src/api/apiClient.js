@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE, COMPANY_CODE } from './Variables';
+import { API_BASE } from './Variables';
 import { store } from '../redux/store';
 import { logout } from '../redux/userSlice';
 
@@ -7,7 +7,6 @@ const apiClient = axios.create({
   baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
-    //  "X-Company-Code": COMPANY_CODE
   },
 });
 
