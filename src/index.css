@@ -3,28 +3,56 @@
 :root {
   --primary-color: #d4af37; /* Gold */
   --primary-hover: #e8c454;
-  --bg-color: #0d0d0d;
-  --surface-color: #1a1a1a;
-  --text-light: #f5f5f5;
-  --text-muted: #a0a0a0;
+  --bg-color: #080808;
+  --surface-color: #121212;
+  --text-light: #f3f4f6;
+  --text-muted: #9ca3af;
   --accent-color: #bfa15f;
+  --border-color: #1f2937;
   --font-main: 'Alexandria', sans-serif;
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
+  --header-bg: rgba(8, 8, 8, 0.85);
+  --input-bg: #1a1a1a;
+  --btn-bg: #1f2937;
+  --badge-bg: #1f2937;
+  --badge-text: #f3f4f6;
+  --active-badge-bg: #f3f4f6;
+  --active-badge-text: #080808;
 }
 
 [data-theme="light"] {
-  --primary-color: #bfa15f; 
-  --primary-hover: #d4af37;
-  --bg-color: #fafafa;
+  --primary-color: #111111; 
+  --primary-hover: #333333;
+  --bg-color: #f9fafb;
   --surface-color: #ffffff;
-  --text-light: #111111;
-  --text-muted: #555555;
-  --accent-color: #8c733f;
+  --text-light: #111827;
+  --text-muted: #6b7280;
+  --accent-color: #bfa15f;
+  --border-color: #e5e7eb;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --input-bg: #f3f4f6;
+  --btn-bg: #e5e7eb;
+  --badge-bg: #f3f4f6;
+  --badge-text: #4b5563;
+  --active-badge-bg: #111827;
+  --active-badge-text: #ffffff;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html{
+      scroll-padding: 10rem;
+}
+@media (max-width: 768px) {
+
+html{  
+  scroll-padding: 14rem;
+}
 }
 
 body {
@@ -63,7 +91,10 @@ button {
   border: none;
   outline: none;
 }
-
+img ,.img,.image{
+  max-width: 100%;
+  display: block;
+}
 /* Base Animations */
 .reveal {
   opacity: 0;

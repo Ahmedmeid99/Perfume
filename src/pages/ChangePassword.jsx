@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, CheckCircle, Loader2 } from 'lucide-react';
+import { Lock, CheckCircle, Loader2, KeyRound } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { ChangeCustomerPassword } from '../api/Customer';
 import { useNavigate } from 'react-router-dom';
@@ -72,88 +72,85 @@ export default function ChangePassword() {
   };
 
   return (
-    <div style={{ 
+    <div className="auth-page-container" style={{ 
       minHeight: '100vh', 
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center', 
       background: 'var(--bg-color)',
-      padding: '2rem'
+      padding: '2rem',
+      paddingTop: '120px'
     }}>
-      <div className="auth-modal animate-view reveal active" style={{ 
-        position: 'static', 
-        transform: 'none', 
-        opacity: 1, 
-        visibility: 'visible',
-        boxShadow: '0 30px 60px rgba(0,0,0,0.4)',
-        border: '1px solid rgba(212, 175, 55, 0.2)'
-      }}>
+      <div className="streetwear-auth-card animate-view reveal active">
         {success ? (
           <div className="rating-modal-success" style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-            <CheckCircle size={56} color="#10b981" style={{ margin: '0 auto 1.5rem', display: 'block' }} />
-            <h3 style={{ fontSize: '1.5rem', color: '#fff', marginBottom: '0.5rem' }}>{t.successMsg}</h3>
+            <CheckCircle size={56} style={{ color: 'var(--primary-color)', margin: '0 auto 1.5rem', display: 'block' }} />
+            <h3 style={{ fontSize: '1.5rem', color: 'var(--text-light)', marginBottom: '0.5rem' }}>{t.successMsg}</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t.successDesc}</p>
           </div>
         ) : (
           <>
-            <div className="auth-header">
-              <h2 style={{ fontSize: '2.5rem' }}>{t.title}</h2>
-              <p style={{ fontSize: '1.1rem' }}>{t.desc}</p>
+            <div className="auth-card-header">
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'center', marginBottom: '0.5rem' }}>
+                <KeyRound size={24} style={{ color: 'var(--primary-color)' }} />
+                <h2 style={{ margin: 0 }}>{t.title}</h2>
+              </div>
+              <p>{t.desc}</p>
             </div>
 
-            {error && <div className="auth-error" style={{ padding: '1rem', marginBottom: '2rem' }}>{error}</div>}
+            {error && <div className="auth-error-banner">{error}</div>}
 
-            <form className="auth-form" onSubmit={handleSubmit} style={{ gap: '1.5rem' }}>
-              <div className="form-group">
-                <label style={{ color: 'var(--primary-color)' }}>
-                  <Lock size={18} /> {t.currentLabel}
+            <form className="streetwear-auth-form" onSubmit={handleSubmit}>
+              <div className="streetwear-form-group">
+                <label>
+                  <Lock size={16} /> 
+                  <span>{t.currentLabel}</span>
                 </label>
                 <input 
                   type="password" 
                   name="currentPassword" 
-                  className="form-input" 
+                  className="streetwear-form-input" 
                   placeholder="••••••••" 
                   required 
                   value={formData.currentPassword}
                   onChange={handleChange}
-                  style={{ padding: '1.2rem', background: 'rgba(255,255,255,0.03)' }}
                 />
               </div>
 
-              <div className="form-group">
-                <label style={{ color: 'var(--primary-color)' }}>
-                  <Lock size={18} /> {t.newLabel}
+              <div className="streetwear-form-group">
+                <label>
+                  <Lock size={16} /> 
+                  <span>{t.newLabel}</span>
                 </label>
                 <input 
                   type="password" 
                   name="newPassword" 
-                  className="form-input" 
+                  className="streetwear-form-input" 
                   placeholder="••••••••" 
                   required 
                   value={formData.newPassword}
                   onChange={handleChange}
-                  style={{ padding: '1.2rem', background: 'rgba(255,255,255,0.03)' }}
                 />
               </div>
 
-              <div className="form-group">
-                <label style={{ color: 'var(--primary-color)' }}>
-                  <Lock size={18} /> {t.confirmLabel}
+              <div className="streetwear-form-group">
+                <label>
+                  <Lock size={16} /> 
+                  <span>{t.confirmLabel}</span>
                 </label>
                 <input 
                   type="password" 
                   name="confirmPassword" 
-                  className="form-input" 
+                  className="streetwear-form-input" 
                   placeholder="••••••••" 
                   required 
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  style={{ padding: '1.2rem', background: 'rgba(255,255,255,0.03)' }}
                 />
               </div>
 
-              <button className="cta-button solid auth-submit" disabled={loading} style={{ padding: '1.2rem', fontSize: '1.1rem', marginTop: '1rem' }}>
-                {loading ? <Loader2 className="spinner" size={24} /> : t.submitBtn}
+              <button className="cta-button-redesigned auth-submit-btn" disabled={loading} style={{ marginTop: '1rem' }}>
+                {loading ? <Loader2 className="spinner" size={20} /> : t.submitBtn}
               </button>
             </form>
           </>
