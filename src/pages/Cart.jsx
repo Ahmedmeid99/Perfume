@@ -30,29 +30,18 @@ export default function Cart() {
   const SHIPPING = 0;
   const [loading, setLoading] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [createdOrderCode, setCreatedOrderCode] = useState(null);
   const [guestForm, setGuestForm] = useState({
     name: "",
     phone: "",
     address: "",
     notes: "",
   });
+  const [guestOrderSent, setGuestOrderSent] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const formatPhoneForWhatsApp = (phone) => {
-    const digits = `${phone || ""}`.replace(/\D/g, "");
-
-    if (!digits) return "";
-    if (digits.startsWith("00")) return `+${digits.slice(2)}`;
-    if (digits.startsWith("+")) return digits;
-    if (digits.startsWith("2")) return `+${digits}`;
-    if (digits.startsWith("201")) return `+${digits}`;
-    if (digits.startsWith("01")) return `+2${digits}`;
-
-    return `+20${digits.startsWith("0") ? digits.slice(1) : digits}`;
-  };
 
   const createOrderNumber = () =>
     `ORD-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
@@ -81,31 +70,49 @@ export default function Cart() {
     ].join("\n");
   };
 
-  const formatCustomerThankYouMessage = (orderNumber) => {
+  const formatAuthenticatedOrderMessage = (orderCode) => {
     const formattedItems = items.map(
       (item, index) =>
         `${index + 1}. ${item.name} x${item.quantity} - ${item.totalPrice || item.price * item.quantity} EGP`,
     );
 
+    const customerName =
+      currentUser?.user?.fullName ||
+      currentUser?.user?.name ||
+      currentUser?.name ||
+      currentUser?.user?.email ||
+      currentUser?.email ||
+      "Registered Customer";
+
+    const customerPhone =
+      currentUser?.user?.phone ||
+      currentUser?.phone ||
+      currentUser?.user?.mobile ||
+      currentUser?.mobile ||
+      "-";
+
     return [
-      "Thank you for your order!",
+      `Order Code: ${orderCode}`,
       "",
-      `Order #: ${orderNumber}`,
+      "New Order",
+      "",
+      `Customer: ${customerName}`,
+      `Phone: ${customerPhone}`,
       "",
       "Items:",
       ...formattedItems,
       "",
       `Total: ${totalAmount} EGP`,
       "Payment: Cash on delivery",
-      "",
-      "We'll contact you shortly to confirm your order.",
-      "",
-      "Thank you for shopping with us.",
     ].join("\n");
   };
 
   const handleGuestOrderSubmit = (e) => {
     e.preventDefault();
+
+    if (guestOrderSent) {
+      return;
+    }
 
     if (!guestForm.name.trim() || !guestForm.phone.trim()) {
       alert(
@@ -116,30 +123,13 @@ export default function Cart() {
       return;
     }
 
+    setGuestOrderSent(true);
+
     const orderNumber = createOrderNumber();
     const storeMessage = formatGuestOrderMessage(orderNumber);
-    const customerMessage = formatCustomerThankYouMessage(orderNumber);
-    const customerPhone = formatPhoneForWhatsApp(guestForm.phone);
     const storeUrl = `https://wa.me/201095814411?text=${encodeURIComponent(storeMessage)}`;
-    const customerUrl = customerPhone
-      ? `https://wa.me/${customerPhone}?text=${encodeURIComponent(customerMessage)}`
-      : "";
 
     const storeWindow = window.open(storeUrl, "_blank", "noopener,noreferrer");
-    if (customerUrl) {
-      setTimeout(() => {
-        const customerWindow = window.open(
-          customerUrl,
-          "_blank",
-          "noopener,noreferrer",
-        );
-
-        if (!customerWindow) {
-          window.location.href = customerUrl;
-        }
-      }, 300);
-    }
-
     if (!storeWindow) {
       window.location.href = storeUrl;
     }
@@ -175,6 +165,29 @@ export default function Cart() {
 
       const result = await PlaceOrder(orderData);
       if (result) {
+        const orderCode =
+          result?.orderCode ||
+          result?.orderNumber ||
+          result?.OrderCode ||
+          result?.OrderNumber ||
+          result?.id ||
+          result?.orderId ||
+          result?.OrderId ||
+          createOrderNumber();
+
+        setCreatedOrderCode(orderCode);
+
+        const storeMessage = formatAuthenticatedOrderMessage(orderCode);
+        const storeUrl = `https://wa.me/201095814411?text=${encodeURIComponent(storeMessage)}`;
+        const storeWindow = window.open(
+          storeUrl,
+          "_blank",
+          "noopener,noreferrer",
+        );
+        if (!storeWindow) {
+          window.location.href = storeUrl;
+        }
+
         setOrderPlaced(true);
         dispatch(clearCart());
       }
@@ -595,6 +608,7 @@ export default function Cart() {
                   <button
                     type="submit"
                     className="cta-button solid"
+                    disabled={guestOrderSent}
                     style={{
                       width: "100%",
                       padding: "1.2rem",
